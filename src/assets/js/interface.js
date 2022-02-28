@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-06 13:36:46
- * @LastEditTime: 2022-02-26 18:08:58
+ * @LastEditTime: 2022-02-28 18:23:35
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\interface.js
@@ -227,4 +227,16 @@ export function SaveActicle (params)
     data: params,
     headers: { 'content-type': 'application/json' }
   })
+}
+
+/**
+ * @des: 获取文章
+ * @return {*}
+ */
+export function GetActicle(id)
+{
+  return request({
+    url: "/api/Acticle/GetActicle?id="+id,
+    method: "get",
+  },false)
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-16 15:31:30
- * @LastEditTime: 2022-02-26 17:17:25
+ * @LastEditTime: 2022-02-28 17:10:16
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\main.js
@@ -36,10 +36,8 @@ app.config.globalProperties.$cookie = cookie;
 app.config.globalProperties.$dayjs = dayjs;
 
 import loadingBtn from './components/UI/LoadingBtn.vue'
-import UserInfo from './components/UserInfo.vue';
 import CheckInput from './components/UI/CheckInput.vue'
 app.component('loadingbtn', loadingBtn);
-app.component('UserInfo', UserInfo);
 app.component('CheckInput',CheckInput);
 
 router.isReady().then(() => {

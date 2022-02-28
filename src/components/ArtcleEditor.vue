@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-02-28 15:54:53
+ * @LastEditTime: 2022-02-28 22:48:15
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -12,8 +12,8 @@
             <form class="mb-4 needs-validation">
                 <div class="card">
                     <div class="card-header">
-                        <CheckInput :PlaceholderVal="'文章标题'" :CheckAction="CheckRepeatTitle" :RequiredVal=true :PatternVal="'^.{1,30}$'"
-                            :VerifyTipVal="'文章标题长度必须为1-30个字符'" ref="ArticleTitleInput">
+                        <CheckInput :PlaceholderVal="'文章标题'" :CheckAction="CheckRepeatTitle" :RequiredVal=true
+                            :PatternVal="'^.{1,30}$'" :VerifyTipVal="'文章标题长度必须为1-30个字符'" ref="ArticleTitleInput">
                         </CheckInput>
                     </div>
                     <div class="card-body">
@@ -147,7 +147,8 @@
     import {
         CheckRepeatTitle,
         SaveActicle,
-        UpLoadImgByFile
+        UpLoadImgByFile,
+        GetActicle
     } from '../assets/js/interface.js';
     import $ from 'jquery/dist/jquery'
     import 'summernote/dist/summernote-lite.js'
@@ -203,8 +204,8 @@
                         view: viewButton
                     },
                     callbacks: {
-                        onInit: function () {
-
+                        onInit: async function () {
+                            await that.InitActicle();
                         }
                     }
                 });
@@ -264,8 +265,8 @@
                         this.PosterImg = respone.Data;
                     }
                 }
-                console.log(this.$refs.ArticleTitleInput.InputValue);
-                let respone = await SaveActicle({
+                await SaveActicle({
+                    "id":this.$route.query.id,
                     "title": this.$refs.ArticleTitleInput.InputValue,
                     "content": $('.summernote').summernote('code'),
                     "posterUrl": this.PosterImg,
@@ -273,6 +274,20 @@
                     "acticleType": this.ArticleType,
                     "releaseForm": isDraft ? '3' : this.ArticleReleaseForm
                 });
+            },
+            async InitActicle() {
+                if (this.$route.query.id != undefined) {
+                    let respone = await GetActicle(this.$route.query.id);
+                    console.log(respone);
+                    if (respone.Status == 200) {
+                        this.$refs.ArticleTitleInput.InputValue=respone.Data.Title;
+                        this.ArticleTags = [...respone.Data.Tags];
+                        this.PosterImg=respone.Data.PosterUrl;
+                        $('.summernote').summernote('code',respone.Data.Content);
+                        this.ArticleReleaseForm=respone.Data.ReleaseForm;
+                        this.ArticleType=respone.Data.ActicleType;
+                    }
+                }
             }
         },
         async mounted() {
