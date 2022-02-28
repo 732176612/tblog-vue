@@ -1,0 +1,12 @@
+:root {
+    --orange: #ff833b;
+    --blue: #0077ff;
+}
+
+.logoImg {
+    width: 75px;
+}
+
+html, body {
+    height: 100%;
+}
