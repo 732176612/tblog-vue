@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-02-28 22:48:15
+ * @LastEditTime: 2022-03-12 17:41:35
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -86,6 +86,13 @@
                                             私密
                                         </label>
                                     </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="AccessRadio" id="Draft"
+                                            value="3" v-model="ArticleReleaseForm">
+                                        <label class="form-check-label" for="Draft">
+                                            草稿
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -167,7 +174,7 @@
                 ArticleReleaseForm: "1",
                 ArticleType: "1",
                 ArticleTags: [],
-                CheckRepeatTitle: CheckRepeatTitle
+                CheckRepeatTitle: CheckRepeatTitle,
             }
         },
         methods: {
@@ -206,6 +213,17 @@
                     callbacks: {
                         onInit: async function () {
                             await that.InitActicle();
+                        },
+                        onImageUpload: async function (files) {
+                            let respone = await UpLoadImgByFile('ArticleImg', files[0]);
+                            if (respone.Status == 200) {
+                                $('.summernote').summernote('insertImage', respone.Data, 'img');
+                                console.log(that.PosterImg);
+                                if (that.PosterImg.indexOf('/svg/plus-circle-dotted.svg') != -1 && that
+                                    .$refs.PosterImg.files.length == 0) {
+                                    that.PosterImg = respone.Data;
+                                }
+                            }
                         }
                     }
                 });
@@ -245,6 +263,9 @@
                 Modal.getOrCreateInstance(document.getElementById('addTagModal')).hide();
             },
             async OnClickSaveActicle() {
+                if (this.ArticleReleaseForm == '3') {
+                    this.ArticleReleaseForm = '1';
+                }
                 await this.RequestSaveActicle(false);
             },
             async OnClickSaveDraft() {
@@ -265,8 +286,8 @@
                         this.PosterImg = respone.Data;
                     }
                 }
-                await SaveActicle({
-                    "id":this.$route.query.id,
+                let respone= await SaveActicle({
+                    "id": this.$route.query.id,
                     "title": this.$refs.ArticleTitleInput.InputValue,
                     "content": $('.summernote').summernote('code'),
                     "posterUrl": this.PosterImg,
@@ -274,18 +295,21 @@
                     "acticleType": this.ArticleType,
                     "releaseForm": isDraft ? '3' : this.ArticleReleaseForm
                 });
+                if(respone.Status==200){
+                    console.log( this.$router.params)
+                    this.$router.push("/view/index/articleList/" + this.$router.params.blogname);
+                }
             },
             async InitActicle() {
                 if (this.$route.query.id != undefined) {
                     let respone = await GetActicle(this.$route.query.id);
-                    console.log(respone);
                     if (respone.Status == 200) {
-                        this.$refs.ArticleTitleInput.InputValue=respone.Data.Title;
+                        this.$refs.ArticleTitleInput.InputValue = respone.Data.Title;
                         this.ArticleTags = [...respone.Data.Tags];
-                        this.PosterImg=respone.Data.PosterUrl;
-                        $('.summernote').summernote('code',respone.Data.Content);
-                        this.ArticleReleaseForm=respone.Data.ReleaseForm;
-                        this.ArticleType=respone.Data.ActicleType;
+                        this.PosterImg = respone.Data.PosterUrl;
+                        $('.summernote').summernote('code', respone.Data.Content);
+                        this.ArticleReleaseForm = respone.Data.ReleaseForm;
+                        this.ArticleType = respone.Data.ActicleType;
                     }
                 }
             }

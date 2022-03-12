@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-02-16 17:59:44
+ * @LastEditTime: 2022-03-12 18:42:31
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -28,8 +28,8 @@
       </div>
 
       <ul class="nav nav-masthead col-12 col-md-auto mb-2 justify-content-center mb-md-0" style="font-size:1.25rem">
-        <a v-for="(item,index) in Menus" :key="index" class="nav-link" :class="item.Name==$route.name?'active':''"
-          @click="OnClickMenuBtn(item)">
+        <a v-for="(item,index) in Menus" :key="index" class="nav-link"
+          :class="$route.name.indexOf(item.Name)!=-1?'active':''" @click="OnClickMenuBtn(item)">
           {{item.Name}}
         </a>
       </ul>
@@ -39,9 +39,9 @@
       </div>
     </header>
 
-    <main role="main" class="h-100">
+    <main role="main" id="main">
       <div class="container h-100">
-        <router-view :UserDto="UserDto"/>
+        <router-view :UserDto="UserDto" />
       </div>
     </main>
 

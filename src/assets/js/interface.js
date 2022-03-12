@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-06 13:36:46
- * @LastEditTime: 2022-02-28 18:23:35
+ * @LastEditTime: 2022-03-07 22:23:16
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\interface.js
@@ -12,13 +12,12 @@ import request from "./axios"
  * @param {regexName} params
  * @return {*}
  */
-export function VerifyRegex (params)
-{
+export function VerifyRegex(params) {
   return request({
     url: "/api/Common/VerifyRegex",
     method: "get",
     params
-  },false)
+  }, false)
 }
 
 /**
@@ -26,13 +25,12 @@ export function VerifyRegex (params)
  * @param {phoneOrMail} params
  * @return {*}
  */
-export function CheckHavePhoneOrMail (params)
-{
+export function CheckHavePhoneOrMail(params) {
   return request({
     url: "/api/User/CheckHavePhoneOrMail",
     method: "get",
     params
-  },false)
+  }, false)
 }
 
 /**
@@ -40,8 +38,7 @@ export function CheckHavePhoneOrMail (params)
  * @param {phoneOrMail} params
  * @return {*}
  */
-export function RequestVCode (params)
-{
+export function RequestVCode(params) {
   return request({
     url: "/api/User/RequestVCode",
     method: "get",
@@ -54,13 +51,14 @@ export function RequestVCode (params)
  * @param {email,phone,password,vCode} params
  * @return {*}
  */
-export function RegisterUser (params)
-{
+export function RegisterUser(params) {
   return request({
     url: "/api/User/RegisterUser",
     method: "POST",
     data: params,
-    headers: { 'content-type': 'application/json' }
+    headers: {
+      'content-type': 'application/json'
+    }
   })
 }
 
@@ -69,18 +67,18 @@ export function RegisterUser (params)
  * @param {PhoneOrMail,Password} params
  * @return {token}
  */
-export function LoginUser (params)
-{
+export function LoginUser(params) {
   return request({
     url: "/api/User/LoginUser",
     method: "POST",
     data: params,
-    headers: { 'content-type': 'application/json' }
+    headers: {
+      'content-type': 'application/json'
+    }
   })
 }
 
-export function LogOut ()
-{
+export function LogOut() {
   return request({
     url: "/api/User/LogOut",
     method: "POST",
@@ -92,8 +90,7 @@ export function LogOut ()
  * @param {phoneOrMail} params
  * @return {*}
  */
-export function RequestRecoverPwd (params)
-{
+export function RequestRecoverPwd(params) {
   return request({
     url: "/api/User/RequestRecoverPwd",
     method: "get",
@@ -106,13 +103,14 @@ export function RequestRecoverPwd (params)
  * @param {vcode,phoneOrMail,password} params
  * @return {*}
  */
-export function ResponeRecoverPwd (params)
-{
+export function ResponeRecoverPwd(params) {
   return request({
     url: "/api/User/ResponeRecoverPwd",
     method: "POST",
     data: params,
-    headers: { 'content-type': 'application/json' }
+    headers: {
+      'content-type': 'application/json'
+    }
   })
 }
 
@@ -121,13 +119,12 @@ export function ResponeRecoverPwd (params)
  * @param {blogName} 
  * @return {*}
  */
-export function GetUserInfo (params)
-{
+export function GetUserInfo(params) {
   return request({
     url: "/api/User/GetUserInfo",
     method: "GET",
     params
-  },false)
+  }, false)
 }
 
 /**
@@ -135,13 +132,12 @@ export function GetUserInfo (params)
  * @param {token} params
  * @return {*}
  */
-export function SerializeJwt (params)
-{
+export function SerializeJwt(params) {
   return request({
     url: "/api/User/SerializeJwt",
     method: "get",
     params
-  },false)
+  }, false)
 }
 
 /**
@@ -149,13 +145,12 @@ export function SerializeJwt (params)
  * @param {BlogName} params
  * @return {*}
  */
-export function CheckHaveBlogName (params)
-{
+export function CheckHaveBlogName(params) {
   return request({
     url: "/api/User/CheckHaveBlogName",
     method: "get",
     params
-  },false)
+  }, false)
 }
 
 /**
@@ -163,13 +158,14 @@ export function CheckHaveBlogName (params)
  * @param {blogName,headImgUrl,introduction,userName,sex,birthday} params
  * @return {*}
  */
-export function SaveUserInfo (params)
-{
+export function SaveUserInfo(params) {
   return request({
     url: "/api/User/SaveUserInfo",
     method: "POST",
     data: params,
-    headers: { 'content-type': 'application/json' }
+    headers: {
+      'content-type': 'application/json'
+    }
   })
 }
 
@@ -178,40 +174,39 @@ export function SaveUserInfo (params)
  * @param {path(保存路径),formFile} params
  * @return {*}
  */
-export function UpLoadImgByFile (path,formFile)
-{
-  let formData=new FormData();
-  formData.append("files",formFile)
+export function UpLoadImgByFile(path, formFile) {
+  let formData = new FormData();
+  formData.append("files", formFile)
   return request({
-    url: "/api/Media/UpLoadImgByFile?path="+path,
+    url: "/api/Media/UpLoadImgByFile?path=" + path,
     method: "POST",
     data: formData,
-    headers: { 'content-type': 'multipart/form-data' }
-  },false)
+    headers: {
+      'content-type': 'multipart/form-data'
+    }
+  }, false)
 }
 
 /**
  * @des: 根据角色权限获取菜单
  * @return {*}
  */
-export function GetMenus()
-{
+export function GetMenus() {
   return request({
     url: "/api/Menu/GetMenus",
     method: "get",
-  },false)
+  }, false)
 }
 
 /**
  * @des: 检查重复标题
  * @return {*}
  */
-export function CheckRepeatTitle(title)
-{
+export function CheckRepeatTitle(title) {
   return request({
-    url: "/api/Acticle/CheckRepeatTitle?title="+title,
+    url: "/api/Acticle/CheckRepeatTitle?title=" + title,
     method: "get",
-  },false)
+  }, false)
 }
 
 /**
@@ -219,13 +214,14 @@ export function CheckRepeatTitle(title)
  * @param {title,content,posterUrl,tags[...],acticleType,releaseForm} params
  * @return {*}
  */
-export function SaveActicle (params)
-{
+export function SaveActicle(params) {
   return request({
     url: "/api/Acticle/SaveActicle",
     method: "POST",
     data: params,
-    headers: { 'content-type': 'application/json' }
+    headers: {
+      'content-type': 'application/json'
+    }
   })
 }
 
@@ -233,10 +229,43 @@ export function SaveActicle (params)
  * @des: 获取文章
  * @return {*}
  */
-export function GetActicle(id)
-{
+export function GetActicle(id) {
   return request({
-    url: "/api/Acticle/GetActicle?id="+id,
+    url: "/api/Acticle/GetActicle?id=" + id,
     method: "get",
-  },false)
+  }, false)
+}
+
+/**
+ * @des: 获取文章标题汇总
+ * @return {*}
+ */
+export function GetTags(blogName) {
+  return request({
+    url: "/api/Acticle/GetTags?blogname=" + blogName,
+    method: "get",
+  }, false)
+}
+
+/**
+ * @des: 获取枚举值
+ * @return {*}
+ */
+export function GetEnums(enumNames) {
+  return request({
+    url: "/api/Common/GetEnums?enumNames=" + enumNames,
+    method: "get",
+  }, false)
+}
+
+/**
+ * @des: 获取文章列表
+ * @return {*}
+ */
+export function GetActicleList(params) {
+  return request({
+    url: "/api/Acticle/GetActicleList",
+    method: "get",
+    params
+  }, false)
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-01-28 16:29:07
- * @LastEditTime: 2022-02-02 16:28:41
+ * @LastEditTime: 2022-03-06 19:03:59
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\utils.js
@@ -49,4 +49,44 @@ async function getToken() {
         return token.value;
     }
     return token;
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+/**
+ * @des: 时间戳转换为几个月前,几周前,几天前,几分钟前
+ * @param {*} dateStr
+ * @return {*}
+ */
+function getDateDiff(dateStr) {
+    var dateTimeStamp=Date.parse(dateStr.replace(/-/gi,"/"));
+    var minute = 1000 * 60;
+    var hour = minute * 60;
+    var day = hour * 24;
+    var month = day * 30;
+    var now = new Date().getTime();
+    var diffValue = now - dateTimeStamp;
+    if (diffValue < 0) {
+        return;
+    }
+    var monthC = diffValue / month;
+    var weekC = diffValue / (7 * day);
+    var dayC = diffValue / day;
+    var hourC = diffValue / hour;
+    var minC = diffValue / minute;
+    if (monthC >= 1) {
+        result = "" + parseInt(monthC) + "月前";
+    } else if (weekC >= 1) {
+        result = "" + parseInt(weekC) + "周前";
+    } else if (dayC >= 1) {
+        result = "" + parseInt(dayC) + "天前";
+    } else if (hourC >= 1) {
+        result = "" + parseInt(hourC) + "小时前";
+    } else if (minC >= 1) {
+        result = "" + parseInt(minC) + "分钟前";
+    } else
+        result = "刚刚";
+    return result;
 }

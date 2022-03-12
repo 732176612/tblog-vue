@@ -1,0 +1,262 @@
+<!--
+ * @Author: your name
+ * @Date: 2022-01-23 15:57:56
+ * @LastEditTime: 2022-03-12 18:21:26
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: \tblog\src\components\UserInfo.vue
+-->
+<template>
+    <div class="row justify-content-center" style="padding-bottom:4rem">
+        <div class="col-12 col-xl-10 col-lg-10 col-md-8 col-sm-10 mb-2">
+            <div class="nav-scroller">
+                <nav class="nav d-flex">
+                    <div v-for="(item,index) in ArticleTags" :key="index"
+                        class="tag rounded-pill mx-2 py-1 px-3 mb-2 text-center"
+                        :style="(SelectArticleTags.indexOf(item)!= '-1'? 'background-color:var(--blue)':'')"
+                        @click="OnClickArticleTag(item)">
+                        {{item}}</div>
+                </nav>
+            </div>
+        </div>
+
+        <div class="col-xl-10 col-lg-10 col-md-11 col-sm-12">
+            <div class="card">
+                <div class="card-header bg-white">
+                    <ul class="nav text-center">
+                        <li v-for="(item,index) in SortTags" :key="index" class="nav-item px-2 sortTag"
+                            :class="(SortTags.length==index+1?'border-none;':'border-right')"
+                            :style="(SelectSortTag==item.Key?'Color:var(--blue)':'')" @click="OnClickSortTag(item.Key)">
+                            {{item.Value}}</li>
+                    </ul>
+                </div>
+                <div class="card-body bg-white pt-0">
+                    <div class="list">
+                        <Mescroll ref="Mescroll" :upCallback="ScrollUpCallback" :pageSize=10 :pageIndex=0>
+                            <div class="item" v-for="(article,index) in ArticleList" :key="index">
+                                <div class="item-header py-2">
+                                    <ul class="nav">
+                                        <li class="nav-item border-right" style="padding-right:0.5rem;color:#626262">
+                                            {{article.CBlogName}}</li>
+                                        <li class="nav-item border-right px-2">{{article.CDate}}</li>
+                                        <li class="nav-item px-2">{{article.Tags.join('.')}}</li>
+                                    </ul>
+                                </div>
+                                <div class="item-content pb-2 d-flex justify-content-between">
+                                    <div class="content-main d-flex align-content-between flex-column">
+                                        <div class="content-title">{{article.Title}}</div>
+                                        <div class="content">{{article.Content.replace(' ','')}}</div>
+                                        <div class="content-end">
+                                            <ul class="nav text-center">
+                                                <li class="nav-item" style="padding-right:0.25rem">
+                                                    <i class="bi bi-eye mr-1" style="padding-right:0.25rem"></i>
+                                                    {{article.LookNum}}</li>
+                                                <li class="nav-item px-2">
+                                                    <i class="bi bi-hand-thumbs-up" style="padding-right:0.25rem"></i>
+                                                    {{article.LikeNum}}</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <img v-if="article.PosterUrl!=''" :src="article.PosterUrl" class="content-img" />
+                                </div>
+                            </div>
+                        </Mescroll>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    import {
+        GetTags,
+        GetEnums,
+        GetActicleList
+    } from '../assets/js/interface.js';
+    export default {
+        name: "ArtcleList",
+        data() {
+            return {
+                ArticleTags: [],
+                SelectArticleTags: [],
+                SortTags: [],
+                SelectSortTag: '-1',
+                ArticleList: [],
+                TotalPageIndex: 0,
+                CurPageIndex: 0
+            }
+        },
+        beforeRouteEnter(to, from, next) {
+            next(vm => {
+                vm.$refs.Mescroll && vm.$refs.Mescroll.beforeRouteEnter()
+            })
+        },
+        beforeRouteLeave(to, from, next) {
+            this.$refs.Mescroll && this.$refs.Mescroll.beforeRouteLeave()
+            next()
+        },
+        methods: {
+            ScrollInit() {
+                this.$refs.Mescroll.init();
+                let that = this;
+                window.addEventListener('scroll', function (e) {
+                    let innerHeight = document.getElementById('main').clientHeight
+                    let outerHeight = document.documentElement.clientHeight
+                    let scrollTop = document.documentElement.scrollTop
+                    // scrollTop在页面为滚动时为0，开始滚动后，慢慢增加，滚动到页面底部时，出现innerHeight <= (outerHeight + scrollTop)的情况，严格来讲，是接近底部。
+                    if (outerHeight + scrollTop >= innerHeight) {
+                        if (that.TotalPageIndex > that.CurPageIndex) {
+                            that.$refs.Mescroll.mescroll.triggerUpScroll();
+                        }
+                    }
+                });
+            },
+            async ScrollUpCallback(page, mescroll) {
+                let arr = await this.RequestGetActicleList(page.size, page.num);
+                if (page.num === 1) this.ArticleList = []
+                this.ArticleList = this.ArticleList.concat(arr)
+                this.$nextTick(() => {
+                    mescroll.endSuccess(arr.length)
+                })
+            },
+            RequestGetTags: async function () {
+                let respone = await GetTags(this.$route.params.blogname);
+                this.ArticleTags = respone.Data;
+            },
+            RequestGetEnums: async function () {
+                let respone = await GetEnums('EnumActicleSortTag');
+                if (respone.Data.length == 1) {
+                    this.SortTags = respone.Data[0].EnumKeyValues;
+                    if (this.SortTags.length >= 1) {
+                        this.SelectSortTag = this.SortTags[0].Key;
+                    }
+                }
+            },
+            RequestGetActicleList: async function (pageSize, pageIndex) {
+                let respone = await GetActicleList({
+                    pageSize: pageSize,
+                    pageIndex: pageIndex,
+                    blogName: this.$route.params.blogname,
+                    acticleReleaseForm: 1,
+                    acticleSortTag: this.SelectSortTag,
+                    tags: this.SelectArticleTags.join(',')
+                });
+                this.TotalPageIndex = respone.Data.PageCount;
+                this.CurPageIndex = respone.Data.PageIndex;
+                let articleList = respone.Data.Data;
+                for (let i = 0; i < articleList.length; i++) {
+                    articleList[i].CDate = getDateDiff(articleList[i].CDate);
+                    articleList[i].PosterUrl += '?imageMogr2/crop/120x120/gravity/center';
+                }
+                return articleList;
+            },
+            OnClickArticleTag: function (tag) {
+                let index = this.SelectArticleTags.indexOf(tag);
+                if (index != '-1') {
+                    this.SelectArticleTags = [
+                        ...this.SelectArticleTags.slice(0, index),
+                        ...this.SelectArticleTags.slice(index + 1)
+                    ];
+                } else {
+                    this.SelectArticleTags = [
+                        ...this.SelectArticleTags,
+                        tag
+                    ];
+                }
+                this.ArticleList = [];
+                this.$refs.Mescroll.mescroll.setPageNum(1);
+                this.$refs.Mescroll.mescroll.triggerUpScroll();
+            },
+            OnClickSortTag: function (tag) {
+                this.SelectSortTag = tag;
+                this.ArticleList = [];
+                this.$refs.Mescroll.mescroll.setPageNum(1);
+                this.$refs.Mescroll.mescroll.triggerUpScroll();
+            }
+        },
+        async mounted() {
+            this.RequestGetTags();
+            await this.RequestGetEnums();
+            this.ScrollInit();
+        }
+    }
+</script>
+
+<style scoped>
+    .tag {
+        background-color: #949494;
+        color: white;
+        font-size: .85rem;
+    }
+
+    .tag:hover {
+        background-color: var(--blue);
+        cursor: pointer;
+    }
+
+    .sortTag {
+        color: black;
+    }
+
+    .border-right {
+        border-right: 1px solid hsla(0, 0%, 59.2%, .2);
+    }
+
+    .border-none {
+        border: none;
+    }
+
+    .sortTag:hover {
+        color: var(--blue);
+    }
+
+    .content-main {
+        width: 0;
+    flex: 1 1 auto;
+    }
+
+    .item {
+        border-bottom: 1px solid #949494;
+    }
+
+    .item-header {
+        color: #949494;
+        font-size: 0.9rem;
+    }
+
+    .item-content {
+        display: flex;
+    }
+
+    .content {
+        color: #949494;
+        font-size: 1rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+    }
+
+    .content-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 1;
+    }
+
+    .content-end {
+        padding-top: 0.25rem;
+        font-size: 0.85rem;
+    }
+
+    .content-img {
+        margin-left: 24px;
+        height: 120px;
+        width: 120px;
+    }
+</style>
