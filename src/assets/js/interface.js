@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-06 13:36:46
- * @LastEditTime: 2022-03-07 22:23:16
+ * @LastEditTime: 2022-04-17 16:51:18
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\interface.js
@@ -268,4 +268,182 @@ export function GetActicleList(params) {
     method: "get",
     params
   }, false)
+}
+
+/**
+ * @des: 点赞文章
+ * @return {*}
+ */
+export function LikeArticle(id) {
+  return request({
+    url: "/api/Acticle/LikeArticle?id=" + id,
+    method: "get"
+  }, false)
+}
+
+/**
+ * @des: 查阅文章
+ * @return {*}
+ */
+export function LookArticle(id) {
+  return request({
+    url: "/api/Acticle/LookArticle?id=" + id,
+    method: "get"
+  }, false)
+}
+
+/**
+ * @des: 删除文章
+ * @return {*}
+ */
+export function DeleteArticle(id) {
+  return request({
+    url: "/api/Acticle/DeleteArticle?id=" + id,
+    method: "get"
+  }, false)
+}
+
+/**
+ * @des: 保存项目经历
+ * @param [
+ * {
+ *    Project,
+ *    Role,
+ *    City,
+ *    StartDate,
+ *    EndDate,
+ *    Introduction
+ * }] params
+ * @return {token}
+ */
+export function SaveProjectInfo(params) {
+  return request({
+    url: "/api/ProjectInfo/Save",
+    method: "POST",
+    data: params,
+    headers: {
+      'content-type': 'application/json'
+    }
+  })
+}
+
+/**
+ * @des: 获取项目经历
+ * @param {blogName}
+ * @return {token}
+ */
+export function GetProjectInfo(blogName) {
+  return request({
+      url: "/api/ProjectInfo/Get?blogname=" + blogName,
+      method: "get"
+    },
+    false)
+}
+
+/**
+ * @des: 保存工作经历
+ * @param [
+ * {
+ *    Company,
+ *    Position,
+ *    Department,
+ *    City,
+ *    StartDate,
+ *    EndDate,
+ *    Introduction
+ * }] params
+ * @return {token}
+ */
+export function SaveCompanyInfo(params) {
+  return request({
+    url: "/api/CompanyInfo/Save",
+    method: "POST",
+    data: params,
+    headers: {
+      'content-type': 'application/json'
+    }
+  })
+}
+
+/**
+ * @des: 获取工作经历
+ * @param {blogName}
+ * @return {token}
+ */
+export function GetCompanyInfo(blogName) {
+  return request({
+      url: "/api/CompanyInfo/Get?blogname=" + blogName,
+      method: "get"
+    },
+    false)
+}
+
+/**
+ * @des: 保存教育经历
+ * @param [
+ * {
+ *    School,
+ *    Major,
+ *    StartDate,
+ *    EndDate,
+ *    Introduction
+ * }] params
+ * @return {token}
+ */
+export function SaveEduInfo(params) {
+  return request({
+    url: "/api/EduInfo/Save",
+    method: "POST",
+    data: params,
+    headers: {
+      'content-type': 'application/json'
+    }
+  })
+}
+
+/**
+ * @des: 获取教育经历
+ * @param {blogName}
+ * @return {token}
+ */
+export function GetEduInfo(blogName) {
+  return request({
+      url: "/api/EduInfo/Get?blogname=" + blogName,
+      method: "get"
+    },
+    false)
+}
+
+/**
+ * @des: 保存专业技能
+ * @param [
+ * {
+ *    Skill,
+ *    Progress,
+ *    Sort
+ * }] params
+ * @return {token}
+ */
+export function SaveSkillInfo(params) {
+  return request({
+    url: "/api/SkillInfo/Save",
+    method: "POST",
+    data: params,
+    headers: {
+      'content-type': 'application/json'
+    }
+  })
+}
+
+/**
+ * @des: 获取专业技能
+ * @param {blogName}
+ * @return {token}
+ */
+export function GetSkillInfo(blogName) {
+  return request({
+      url: "/api/SkillInfo/Get?blogname=" + blogName,
+      method: "get"
+    },
+    false)
 }

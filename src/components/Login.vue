@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-16 15:31:30
- * @LastEditTime: 2022-02-11 20:02:27
+ * @LastEditTime: 2022-03-14 21:03:49
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\Login.vue
@@ -104,7 +104,7 @@
           this.$cookie.set("PhoneOrMail", this.PhoneOrMail);
           this.$cookie.set('AutoLogin', this.AutoLogin);
           if (respone.Data == '') {
-            this.$router.push("/view/UserInfo");
+            this.$router.push("/view/userinfo");
           } else {
             this.$router.push("/view/index/" + respone.Data);
           }
@@ -114,7 +114,7 @@
         let autoLogin = this.$cookie.get('AutoLogin');
         if (autoLogin != undefined) {
           this.AutoLogin = autoLogin;
-          if (autoLogin) {
+          if (autoLogin==true) {
             console.log("自动登录！");
             let token = this.$cookie.get('token');
             if (token != undefined) {
@@ -124,7 +124,7 @@
               if (respone.Data.BlogName != null && respone.Data.BlogName != '') {
                 this.$router.push("/view/index/" + respone.Data.BlogName);
               } else {
-                this.$router.push("/view/UserInfo");
+                this.$router.push("/view/userinfo");
               }
             }
           }

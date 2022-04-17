@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-03-12 18:42:31
+ * @LastEditTime: 2022-03-15 17:07:01
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
   <div class="d-flex h-100 mx-auto flex-column px-xl-5 px-lg-5 px-md-4 px-sm-3">
-    <header
+    <header v-if="UserDto.BlogName!=''"
       class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
       <div class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
         <div class="dropdown text-end">
@@ -17,8 +17,8 @@
             <img :src="UserDto.UserHeadImg" alt="mdo" width="48" height="48" class="rounded-circle NavUserImg">
           </a>
           <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" :href="'/view/index/articleEditor/'+UserDto.BlogName">写文章</a></li>
-            <li><a class="dropdown-item" :href="'/view/index/UserInfo/'+UserDto.BlogName">个人信息</a></li>
+            <li><a class="dropdown-item" :href="'/view/acticleEditor/'+UserDto.BlogName">写文章</a></li>
+            <li><a class="dropdown-item" :href="'/view/userInfo/'+UserDto.BlogName">个人信息</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
@@ -35,13 +35,13 @@
       </ul>
 
       <div class="col-md-3 text-end">
-        <input type="search" class="form-control text-center" placeholder="文章关键词" aria-label="Search">
+        <!-- <input type="search" class="form-control text-center" placeholder="文章关键词" aria-label="Search"> -->
       </div>
     </header>
 
-    <main role="main" id="main">
-      <div class="container h-100">
-        <router-view :UserDto="UserDto" />
+    <main role="main" id="main" style="height:auto;">
+      <div class="container h-100 pb-4">
+        <router-view />
       </div>
     </main>
 
@@ -70,6 +70,7 @@
           BlogName: "",
           UserHeadImg: headImgUrl,
           UserName: "",
+          IsInit: false
         },
         Menus: []
       }
@@ -82,15 +83,16 @@
         }
       },
       async InitUserInfo() {
-        this.UserDto.BlogName = this.$route.params.blogname;
-        let respone = await GetUserInfo({
-          "BlogName": this.$route.params.blogname
-        });
+        let respone = await GetUserInfo();
         if (respone != null && respone.Status == 200) {
-          let userDto = respone.Data;
-          this.UserDto.UserName = userDto.UserName;
-          if (userDto.HeadImgUrl != '')
-            this.UserDto.UserHeadImg = userDto.HeadImgUrl;
+          let model = respone.Data;
+          this.UserDto.UserName = model.UserName;
+          if (model.HeadImgUrl != '')
+            this.UserDto.UserHeadImg = model.HeadImgUrl;
+          this.UserDto.BlogName = model.BlogName;
+        } else {
+          this.$cookie.set('AutoLogin', 'false');
+          this.$router.push("/view/login");
         }
       },
       OnClickLogOut() {
@@ -99,7 +101,7 @@
         this.$router.push("/view/login");
       },
       OnClickMenuBtn(item) {
-        this.$router.push(item.Url + "/" + this.UserDto.BlogName);
+        this.$router.push(item.Url + "/" + this.$route.params.blogname);
       },
       async CheckToken() {
         let token = await getToken();
@@ -112,18 +114,20 @@
           });
           if (respone.Data.BlogName != null && respone.Data.BlogName != '') {
             await this.$router.push("/view/index/" + respone.Data.BlogName);
+          } else {
+            await this.$router.push("/view/userinfo");
           }
-          return true;
-        } else {
-          return true;
+        } else if (!this.IsInit) {
+          await this.InitUserInfo();
+          await this.InitMenus();
         }
       }
     },
-    async mounted() {
-      if (await this.CheckToken()) {
-        await this.InitUserInfo();
-        await this.InitMenus();
-      }
+    beforeRouteEnter(to, from, next) {
+      next(async _ => {
+        let that = _;
+        await that.CheckToken();
+      })
     }
   }
 </script>
