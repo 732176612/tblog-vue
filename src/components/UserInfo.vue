@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-04-17 17:22:02
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-22 16:18:19
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-  <div class="row justify-content-center  h-100">
+  <div class="row justify-content-center  h-100 px-5 pb-3" style="padding-top:100px">
     <div class="d-flex align-items-start">
       <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
         <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home"
@@ -83,6 +83,18 @@
 
                 <div class="row my-1">
                   <div class="col">
+                    <label class="form-label">签名</label>
+                    <textarea ref="Sign" type="text" class="form-control " placeholder="签名"
+                      :class="Sign||Sign.length!=0?'was-validated':''" pattern="^.{0,40}$"
+                      v-model="Sign"></textarea>
+                    <div class="invalid-feedback">
+                      长度不能超过40个字符
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row my-1">
+                  <div class="col">
                     <label class="form-label">个人介绍</label>
                     <textarea ref="Introduction" type="text" class="form-control " placeholder="个人介绍"
                       :class="IsSumbitUserInfo||Introduction.length!=0?'was-validated':''" pattern="^.{0,140}$"
@@ -152,19 +164,10 @@
         Introduction: "",
         Sex: "1",
         IsSumbitUserInfo: false,
+        Sign:""
       }
     },
     methods: {
-      OnClickAddProjectInfo() {
-        this.ProjectInfos = [{
-          Project: "",
-          Role: "",
-          City: "",
-          StartDate: "",
-          EndDate: "",
-          Introduction: ""
-        }, ...this.ProjectInfos];
-      },
       async GetVerifyRegex() {
         let regexs = (await VerifyRegex({
           regexName: "BlogName"
@@ -190,7 +193,7 @@
       },
       async OnClickOpenBlog() {
         if (this.BlogNameInVailTip != "" || !this.$refs.UserName.checkValidity() || !this.$refs.Introduction
-          .checkValidity()) {
+          .checkValidity()||!this.$refs.Sign.checkValidity()) {
           this.$toast.error("个人信息填报有误");
           return;
         }
@@ -210,10 +213,15 @@
           UserName: this.UserName,
           Introduction: this.Introduction,
           Sex: this.Sex,
-          HeadImgUrl: this.UserHeadImg
+          HeadImgUrl: this.UserHeadImg,
+          Sign:this.Sign
         });
         if (respone != null && respone.Status == 200) {
+          if(this.$route.params.blogname==undefined)
           this.$router.push("/view/index/" + this.BlogName);
+          else{
+            this.$toast.success("保存成功!");
+          }
         }
       },
       async OnChangeCheckHaveBlogName() {
@@ -262,6 +270,7 @@
             this.Sex = userDto.Sex;
             this.Birthday = userDto.Birthday;
             this.Introduction = userDto.Introduction;
+            this.Sign=userDto.Sign;
             if (userDto.HeadImgUrl != '')
               this.UserHeadImg = userDto.HeadImgUrl;
           }

@@ -13,6 +13,7 @@
     "@tinymce/tinymce-vue": "^4.0.5",
     "@vue/server-renderer": "^3.2.20",
     "admin-lte": "^3.1.0",
+    "aos": "^2.3.4",
     "axios": "^0.24.0",
     "bootstrap": "^5.1.3",
     "bootstrap-icons": "^1.7.2",

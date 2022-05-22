@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-04-04 20:44:43
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-21 14:53:33
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-    <div class="row justify-content-center" style="padding-bottom:4rem">
+    <div class="row justify-content-center px-5 pb-3" style="padding-top:100px">
         <div class="col-12">
             <form class="mb-4 needs-validation">
                 <div class="card">

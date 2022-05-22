@@ -1,46 +1,51 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-03-15 17:07:01
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-21 15:11:43
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-  <div class="d-flex h-100 mx-auto flex-column px-xl-5 px-lg-5 px-md-4 px-sm-3">
-    <header v-if="UserDto.BlogName!=''"
-      class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
-      <div class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
-        <div class="dropdown text-end">
-          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            <img :src="UserDto.UserHeadImg" alt="mdo" width="48" height="48" class="rounded-circle NavUserImg">
-          </a>
-          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" :href="'/view/acticleEditor/'+UserDto.BlogName">写文章</a></li>
-            <li><a class="dropdown-item" :href="'/view/userInfo/'+UserDto.BlogName">个人信息</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" @click="OnClickLogOut">注销</a></li>
-          </ul>
+  <div class="d-flex h-100 mx-auto flex-column">
+    <header v-if="UserDto.BlogName!=''">
+      <nav class="navbar navbar-expand-lg navbar-dark fixed-top" :class="NavClass" aria-label="Ninth navbar example">
+        <div class="container-xl">
+          <a class="navbar-brand" href="#">{{UserDto.BlogName}}</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07XL"
+            aria-controls="navbarsExample07XL" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarsExample07XL">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item" v-for="(item,index) in Menus" :key="index">
+                <a class="nav-link" href="#" :class="$route.name.indexOf(item.Name)!=-1?'active':''"
+                  @click="OnClickMenuBtn(item)">{{item.Name}}</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown"
+                  aria-expanded="false">个人中心</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdown07XL">
+                  <li><a class="dropdown-item" :href="'/view/acticleEditor/'+UserDto.BlogName">写文章</a></li>
+                  <li><a class="dropdown-item" :href="'/view/userInfo/'+UserDto.BlogName">个人信息</a></li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li><a class="dropdown-item" @click="OnClickLogOut">注销</a></li>
+                </ul>
+              </li>
+            </ul>
+            <!-- <form role="search">
+              <input class="form-control" type="search" placeholder="Search" aria-label="Search">
+            </form> -->
+          </div>
         </div>
-      </div>
-
-      <ul class="nav nav-masthead col-12 col-md-auto mb-2 justify-content-center mb-md-0" style="font-size:1.25rem">
-        <a v-for="(item,index) in Menus" :key="index" class="nav-link"
-          :class="$route.name.indexOf(item.Name)!=-1?'active':''" @click="OnClickMenuBtn(item)">
-          {{item.Name}}
-        </a>
-      </ul>
-
-      <div class="col-md-3 text-end">
-        <!-- <input type="search" class="form-control text-center" placeholder="文章关键词" aria-label="Search"> -->
-      </div>
+      </nav>
     </header>
 
     <main role="main" id="main" style="height:auto;">
-      <div class="container h-100 pb-4">
+      <div class="h-100">
         <router-view />
       </div>
     </main>
@@ -70,9 +75,10 @@
           BlogName: "",
           UserHeadImg: headImgUrl,
           UserName: "",
-          IsInit: false
+          IsInit: false,
         },
-        Menus: []
+        Menus: [],
+        NavClass: "bg-primary"
       }
     },
     methods: {
@@ -101,7 +107,7 @@
         this.$router.push("/view/login");
       },
       OnClickMenuBtn(item) {
-        this.$router.push(item.Url + "/" + this.$route.params.blogname);
+        location.href = item.Url + "/" + this.$route.params.blogname;
       },
       async CheckToken() {
         let token = await getToken();
@@ -127,7 +133,21 @@
       next(async _ => {
         let that = _;
         await that.CheckToken();
+        if (that.$route.path.indexOf("index") == -1 || window.scrollY > 550) {
+          that.NavClass = 'bg-primary';
+        } else {
+          that.NavClass = '';
+        }
       })
+    },
+    mounted() {
+      setInterval(() => {
+        if (this.$route.path.indexOf("index") == -1 || window.scrollY > 550) {
+          this.NavClass = 'bg-primary';
+        } else {
+          this.NavClass = '';
+        }
+      }, 100);
     }
   }
 </script>
@@ -162,5 +182,10 @@
   .NavUserImg {
     border: 3px solid var(--blue);
     padding: 3px;
+  }
+
+  .navbar {
+    -webkit-transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
+    transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
   }
 </style>

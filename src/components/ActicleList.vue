@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-03-14 19:39:55
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-21 14:49:16
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-    <div class="row justify-content-center" style="padding-bottom:4rem">
+    <div class="row justify-content-center" style="padding-bottom:4rem;padding-top:100px">
         <div class="col-12 col-xl-10 col-lg-10 col-md-8 col-sm-10 mb-2">
             <div class="nav-scroller">
                 <nav class="nav d-flex">

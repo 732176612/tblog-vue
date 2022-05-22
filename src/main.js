@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-10-16 15:31:30
- * @LastEditTime: 2022-03-13 14:57:30
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-21 15:07:57
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\main.js
  */
@@ -26,10 +26,22 @@ import "vue-toastification/dist/index.css";
 import toast from './assets/js/toast'
 import cookie from 'js-cookie'
 
+import AOS from "aos";
+import "../node_modules/aos/dist/aos.css";
+
+
 const app = createApp(App)
 const router = createRouter(createWebHistory())
+const originalPush=router.push;
+router.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 app.use(router)
 app.use(Toast)
+app.AOS = new AOS.init({
+  disable: "phone"
+});
+app.use(AOS)
 
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)

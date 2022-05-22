@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-11-06 13:36:46
- * @LastEditTime: 2022-04-17 16:51:18
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-22 16:20:21
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\interface.js
  */
@@ -166,7 +166,7 @@ export function SaveUserInfo(params) {
     headers: {
       'content-type': 'application/json'
     }
-  })
+  },false)
 }
 
 /**
