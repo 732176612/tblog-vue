@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-03-19 21:05:05
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-28 18:55:41
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" style="padding-top:100px">
         <div class="col-xl-10 col-lg-10 col-md-11 col-sm-12">
             <div class="main rounded bg-white px-xl-5 px-3 py-4">
                 <div class="title">{{Title}}</div>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="footer d-flex justify-content-center">
                     <button type="button" class="btn btn-outline-primary position-relative mx-3"
-                        @click="OnClickLikeButton" :disabled="CBlogName==BlogName?'disabled':false">
+                        @click="OnClickLikeButton" :disabled="isSelf($route)?'disabled':false">
                         <i class="bi bi-hand-thumbs-up"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
                             {{LikeNums}}+
@@ -39,12 +39,12 @@
                         </span>
                     </button>
 
-                    <button type="button" class="btn btn-outline-success mx-3" v-show="CBlogName==BlogName?true:false"
+                    <button type="button" class="btn btn-outline-success mx-3" v-show="isSelf($route)"
                         @click="OnClickEditorButton">
                         <i class="bi bi-pencil-square"></i>
                     </button>
 
-                    <button type="button" class="btn btn-outline-danger mx-3" v-show="CBlogName==BlogName?true:false"
+                    <button type="button" class="btn btn-outline-danger mx-3" v-show="isSelf($route)"
                         data-bs-toggle="modal" data-bs-target="#deleteModal">
                         <i class="bi bi-trash"></i>
                     </button>
@@ -79,8 +79,7 @@
         GetUserInfo,
         LikeArticle,
         LookArticle,
-        DeleteArticle,
-        SerializeJwt
+        DeleteArticle
     } from '../assets/js/interface.js';
     import {
         Modal
@@ -100,8 +99,7 @@
                 UserName: "",
                 LikeNums: 0,
                 LookNums: 0,
-                CBlogName: "",
-                BlogName: ""
+                CBlogName: ""
             }
         },
         methods: {
@@ -123,25 +121,10 @@
                 }
             },
             async InitUserInfo() {
-                let respone = await GetUserInfo({
-                    "BlogName": this.$route.params.blogname
-                });
+                let respone = await GetUserInfo(this.$route.params.blogname);
                 if (respone != null && respone.Status == 200) {
                     this.UserName = respone.Data.UserName;
                     this.UserHeadImg = respone.Data.HeadImgUrl;
-                }
-            },
-            async RequestSerializeJwt() {
-                let token = await getToken();
-                if (token == null) {
-                    this.$toast.warning('您还未登陆，请登陆');
-                    await this.$router.push("/view/login");
-                }
-                let respone = await SerializeJwt({
-                    token
-                });
-                if (respone.Status == 200) {
-                    this.BlogName = respone.Data.BlogName;
                 }
             },
             async OnClickLikeButton() {
@@ -169,7 +152,6 @@
                 return;
             }
             this.InitUserInfo();
-            this.RequestSerializeJwt();
             this.InitActicle();
             await LookArticle(this.$route.query.id);
         }

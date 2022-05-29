@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-21 14:49:16
+ * @LastEditTime: 2022-05-28 21:19:46
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
     <div class="row justify-content-center" style="padding-bottom:4rem;padding-top:100px">
-        <div class="col-12 col-xl-10 col-lg-10 col-md-8 col-sm-10 mb-2">
+        <div class="col-11 col-xl-10 col-lg-10 col-md-8 col-sm-10 mb-2" v-show="ActicleList.length!=0">
             <div class="nav-scroller">
                 <nav class="nav d-flex">
                     <div v-for="(item,index) in ActicleTags" :key="index"
@@ -20,14 +20,19 @@
             </div>
         </div>
 
-        <div class="col-xl-10 col-lg-10 col-md-11 col-sm-12">
+        <div class="col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11">
             <div class="card">
                 <div class="card-header bg-white">
                     <ul class="nav text-center">
-                        <li v-for="(item,index) in SortTags" :key="index" class="nav-item px-2 sortTag"
-                            :class="(SortTags.length==index+1?'border-none;':'border-right')"
+                        <li v-for="(item,index) in SortTags" :key="index" class="nav-item px-2 sortTag border-right"
                             :style="(SelectSortTag==item.Key?'Color:var(--blue)':'')" @click="OnClickSortTag(item.Key)">
                             {{item.Value}}</li>
+                        <li v-show="isSelf($route)" class="nav-item px-2 sortTag border-right"
+                            :style="(ReleaseForm=='2'?'Color:var(--orange)':'')" @click="OnClickReleaseFormTag(2)">
+                            私密</li>
+                        <li v-show="isSelf($route)" class="nav-item px-2 sortTag" :style="(ReleaseForm=='3'?'Color:var(--orange)':'')"
+                            @click="OnClickReleaseFormTag(3)">
+                            草稿</li>
                     </ul>
                 </div>
                 <div class="card-body bg-white pt-0 px-0">
@@ -86,7 +91,8 @@
                 SelectSortTag: '-1',
                 ActicleList: [],
                 TotalPageIndex: 0,
-                CurPageIndex: 0
+                CurPageIndex: 0,
+                ReleaseForm: '1'
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -123,8 +129,9 @@
                 })
             },
             RequestGetTags: async function () {
-                let respone = await GetTags(this.$route.params.blogname);
+                let respone = await GetTags(this.$route.params.blogname, this.ReleaseForm);
                 this.ActicleTags = respone.Data;
+                this.SelectActicleTags = [];
             },
             RequestGetEnums: async function () {
                 let respone = await GetEnums('EnumActicleSortTag');
@@ -140,7 +147,7 @@
                     pageSize: pageSize,
                     pageIndex: pageIndex,
                     blogName: this.$route.params.blogname,
-                    acticleReleaseForm: 1,
+                    releaseForm: this.ReleaseForm,
                     acticleSortTag: this.SelectSortTag,
                     tags: this.SelectActicleTags.join(',')
                 });
@@ -150,7 +157,8 @@
 
                 for (let i = 0; i < acticleList.length; i++) {
                     acticleList[i].CDate = this.$dayjs(acticleList[i].CDate).fromNow();
-                    acticleList[i].PosterUrl += '?imageMogr2/crop/120x120/gravity/center';
+                    if (acticleList[i].PosterUrl != '')
+                        acticleList[i].PosterUrl += '?imageMogr2/crop/120x120/gravity/center';
                 }
                 return acticleList;
             },
@@ -171,9 +179,19 @@
                 this.$refs.Mescroll.mescroll.setPageNum(1);
                 this.$refs.Mescroll.mescroll.triggerUpScroll();
             },
-            OnClickSortTag: function (tag) {
+            OnClickSortTag: async function (tag) {
                 this.SelectSortTag = tag;
+                this.ReleaseForm = '1';
                 this.ActicleList = [];
+                await this.RequestGetTags();
+                this.$refs.Mescroll.mescroll.setPageNum(1);
+                this.$refs.Mescroll.mescroll.triggerUpScroll();
+            },
+            OnClickReleaseFormTag: async function (tag) {
+                this.SelectSortTag = '2';
+                this.ReleaseForm = tag;
+                this.ActicleList = [];
+                await this.RequestGetTags();
                 this.$refs.Mescroll.mescroll.setPageNum(1);
                 this.$refs.Mescroll.mescroll.triggerUpScroll();
             },

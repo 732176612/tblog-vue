@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-06 13:36:46
- * @LastEditTime: 2022-05-22 16:20:21
+ * @LastEditTime: 2022-05-28 16:33:02
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\interface.js
@@ -119,11 +119,10 @@ export function ResponeRecoverPwd(params) {
  * @param {blogName} 
  * @return {*}
  */
-export function GetUserInfo(params) {
+export function GetUserInfo(blogName) {
   return request({
-    url: "/api/User/GetUserInfo",
-    method: "GET",
-    params
+    url: "/api/User/GetUserInfo?blogName=" + (blogName == undefined ? '' : blogName),
+    method: "GET"
   }, false)
 }
 
@@ -166,7 +165,7 @@ export function SaveUserInfo(params) {
     headers: {
       'content-type': 'application/json'
     }
-  },false)
+  }, false)
 }
 
 /**
@@ -179,6 +178,24 @@ export function UpLoadImgByFile(path, formFile) {
   formData.append("files", formFile)
   return request({
     url: "/api/Media/UpLoadImgByFile?path=" + path,
+    method: "POST",
+    data: formData,
+    headers: {
+      'content-type': 'multipart/form-data'
+    }
+  }, false)
+}
+
+/**
+ * @des: 上传简历
+ * @param {path(保存路径),formFile} params
+ * @return {*}
+ */
+export function UpLoadResumeByFile(path, formFile) {
+  let formData = new FormData();
+  formData.append("files", formFile)
+  return request({
+    url: "/api/Media/UpLoadResumeByFile?path=" + path,
     method: "POST",
     data: formData,
     headers: {
@@ -240,9 +257,9 @@ export function GetActicle(id) {
  * @des: 获取文章标题汇总
  * @return {*}
  */
-export function GetTags(blogName) {
+export function GetTags(blogName, releaseForm) {
   return request({
-    url: "/api/Acticle/GetTags?blogname=" + blogName,
+    url: "/api/Acticle/GetTags?blogname=" + blogName + "&releaseForm=" + releaseForm,
     method: "get",
   }, false)
 }

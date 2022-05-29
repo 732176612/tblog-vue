@@ -1,14 +1,14 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-21 14:53:33
+ * @LastEditTime: 2022-05-24 19:55:03
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-    <div class="row justify-content-center px-5 pb-3" style="padding-top:100px">
-        <div class="col-12">
+    <div class="row justify-content-center px-5 pb-3 w-100" style="padding-top:100px">
+        <div class="w-100">
             <form class="mb-4 needs-validation">
                 <div class="card">
                     <div class="card-header">
@@ -84,13 +84,6 @@
                                             value="2" v-model="ActicleReleaseForm">
                                         <label class="form-check-label" for="Private">
                                             私密
-                                        </label>
-                                    </div>
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="AccessRadio" id="Draft"
-                                            value="3" v-model="ActicleReleaseForm">
-                                        <label class="form-check-label" for="Draft">
-                                            草稿
                                         </label>
                                     </div>
                                 </div>
@@ -285,7 +278,7 @@
                         this.PosterImg = respone.Data;
                     }
                 }
-                let posterImg=this.PosterImg.indexOf('plus-circle-dotted')==-1?this.PosterImg:'';
+                let posterImg = this.PosterImg.indexOf('plus-circle-dotted') == -1 ? this.PosterImg : '';
                 let respone = await SaveActicle({
                     "id": this.$route.query.id,
                     "title": this.$refs.ActicleTitleInput.InputValue,

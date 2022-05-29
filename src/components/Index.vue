@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-21 15:11:43
+ * @LastEditTime: 2022-05-28 21:18:06
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -9,7 +9,7 @@
 <template>
   <div class="d-flex h-100 mx-auto flex-column">
     <header v-if="UserDto.BlogName!=''">
-      <nav class="navbar navbar-expand-lg navbar-dark fixed-top" :class="NavClass" aria-label="Ninth navbar example">
+      <nav class="navbar navbar-expand-sm navbar-dark fixed-top" :class="NavClass" aria-label="Ninth navbar example">
         <div class="container-xl">
           <a class="navbar-brand" href="#">{{UserDto.BlogName}}</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample07XL"
@@ -23,16 +23,17 @@
                 <a class="nav-link" href="#" :class="$route.name.indexOf(item.Name)!=-1?'active':''"
                   @click="OnClickMenuBtn(item)">{{item.Name}}</a>
               </li>
-              <li class="nav-item dropdown">
+              <li v-if="Config.token==''"><a class="nav-link" href="/view/login">登陆</a></li>
+              <li class="nav-item dropdown" v-if="Config.token!=''">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown"
                   aria-expanded="false">个人中心</a>
-                <ul class="dropdown-menu" aria-labelledby="dropdown07XL">
+                <ul class="dropdown-menu" aria-labelledby="dropdown07XL" v-if="true">
                   <li><a class="dropdown-item" :href="'/view/acticleEditor/'+UserDto.BlogName">写文章</a></li>
                   <li><a class="dropdown-item" :href="'/view/userInfo/'+UserDto.BlogName">个人信息</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li><a class="dropdown-item" @click="OnClickLogOut">注销</a></li>
+                  <li ><a class="dropdown-item" @click="OnClickLogOut">注销</a></li>
                 </ul>
               </li>
             </ul>
@@ -66,14 +67,12 @@
     GetMenus,
     LogOut
   } from '../assets/js/interface.js';
-  import headImgUrl from "../assets/svg/person.svg";
   export default {
     name: "Index",
     data() {
       return {
         UserDto: {
           BlogName: "",
-          UserHeadImg: headImgUrl,
           UserName: "",
           IsInit: false,
         },
@@ -89,12 +88,10 @@
         }
       },
       async InitUserInfo() {
-        let respone = await GetUserInfo();
+        let respone = await GetUserInfo(this.$route.params.blogname);
         if (respone != null && respone.Status == 200) {
           let model = respone.Data;
           this.UserDto.UserName = model.UserName;
-          if (model.HeadImgUrl != '')
-            this.UserDto.UserHeadImg = model.HeadImgUrl;
           this.UserDto.BlogName = model.BlogName;
         } else {
           this.$cookie.set('AutoLogin', 'false');
@@ -103,6 +100,7 @@
       },
       OnClickLogOut() {
         LogOut();
+        this.Config.token='';
         this.$cookie.remove('token');
         this.$router.push("/view/login");
       },
@@ -110,18 +108,21 @@
         location.href = item.Url + "/" + this.$route.params.blogname;
       },
       async CheckToken() {
-        let token = await getToken();
-        if (token == null) {
-          this.$toast.warning('您还未登陆，请登陆');
-          await this.$router.push("/view/login");
-        } else if (this.$route.params.blogname == undefined) {
-          let respone = await SerializeJwt({
-            token
-          });
-          if (respone.Data.BlogName != null && respone.Data.BlogName != '') {
-            await this.$router.push("/view/index/" + respone.Data.BlogName);
+        this.Config.token=getCookie('token');
+        if (this.$route.params.blogname == undefined) {
+          if (this.Config.token == '') {
+            this.$toast.warning('您还未登陆，请登陆');
+            await this.$router.push("/view/login");
           } else {
-            await this.$router.push("/view/userinfo");
+            let respone = await SerializeJwt({
+              "token": this.Config.token
+            });
+            if (respone.Data.BlogName != null && respone.Data.BlogName != '') {
+              this.Config.userSelf = respone.Data;
+              await this.$router.push("/view/index/" + respone.Data.BlogName);
+            } else {
+              await this.$router.push("/view/userinfo");
+            }
           }
         } else if (!this.IsInit) {
           await this.InitUserInfo();
@@ -153,10 +154,6 @@
 </script>
 
 <style scoped>
-  .UserHeadImg {
-    width: 30%;
-  }
-
   .nav-masthead .nav-link {
     padding: .25rem 0;
     font-weight: 700;

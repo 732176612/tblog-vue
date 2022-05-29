@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-16 15:31:30
- * @LastEditTime: 2022-03-14 21:03:49
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-28 19:16:29
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\Login.vue
 -->
@@ -103,6 +103,7 @@
         if (respone != null && respone.Status == 200) {
           this.$cookie.set("PhoneOrMail", this.PhoneOrMail);
           this.$cookie.set('AutoLogin', this.AutoLogin);
+          this.Config.token=this.$cookie.get('token');
           if (respone.Data == '') {
             this.$router.push("/view/userinfo");
           } else {

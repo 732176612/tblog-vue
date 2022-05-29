@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-22 16:18:19
+ * @LastEditTime: 2022-05-28 21:18:48
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-  <div class="row justify-content-center  h-100 px-5 pb-3" style="padding-top:100px">
+  <div class="row justify-content-center  h-100 px-2 pb-3" style="padding-top:100px">
     <div class="d-flex align-items-start">
       <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
         <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home"
@@ -85,8 +85,7 @@
                   <div class="col">
                     <label class="form-label">签名</label>
                     <textarea ref="Sign" type="text" class="form-control " placeholder="签名"
-                      :class="Sign||Sign.length!=0?'was-validated':''" pattern="^.{0,40}$"
-                      v-model="Sign"></textarea>
+                      :class="Sign||Sign.length!=0?'was-validated':''" pattern="^.{0,40}$" v-model="Sign"></textarea>
                     <div class="invalid-feedback">
                       长度不能超过40个字符
                     </div>
@@ -104,6 +103,19 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="row my-1">
+                  <div class="col">
+                    <label class="form-label">上传简历</label>
+                    <div>
+                      <a :href="ResumeUrl" target="_blank">{{ResumeName}}</a>
+                    </div>
+                    <div class="input-group mb-3">
+                      <input ref="ResumeFile" type="file" class="form-control" @change="OnResumeFileChage">
+                    </div>
+                  </div>
+                </div>
+
 
                 <div class="d-grid mt-3">
                   <loadingbtn class="btn-block btn-primary" :awaitAction="OnClickOpenBlog"
@@ -137,7 +149,7 @@
     CheckHaveBlogName,
     SaveUserInfo,
     UpLoadImgByFile,
-    SerializeJwt,
+    UpLoadResumeByFile,
     GetUserInfo,
   } from '../assets/js/interface.js';
   import Projectinfo from './ProjectInfo.vue'
@@ -164,7 +176,9 @@
         Introduction: "",
         Sex: "1",
         IsSumbitUserInfo: false,
-        Sign:""
+        Sign: "",
+        ResumeUrl: "",
+        ResumeName: ""
       }
     },
     methods: {
@@ -183,7 +197,7 @@
         if (this.$refs.UserHeadImg.files.length >= 1) {
           let file = this.$refs.UserHeadImg.files[0];
           if (file.size > 1 * 1024 * 1024) {
-            this.$toast.warning("图片大小不能超过2MB");
+            this.$toast.warning("图片大小不能超过1MB");
             this.$refs.UserHeadImg.Value = '';
             return;
           }
@@ -191,9 +205,18 @@
           this.$refs.ViewHeadImg.src = imgUrl;
         }
       },
+      OnResumeFileChage() {
+        if (this.$refs.ResumeFile.files.length >= 1) {
+          let file = this.$refs.ResumeFile.files[0];
+          if (file.size > 1 * 1024 * 1024) {
+            this.$toast.warning("简历大小不能超过1MB");
+            this.$refs.ResumeFile.Value = '';
+          }
+        }
+      },
       async OnClickOpenBlog() {
         if (this.BlogNameInVailTip != "" || !this.$refs.UserName.checkValidity() || !this.$refs.Introduction
-          .checkValidity()||!this.$refs.Sign.checkValidity()) {
+          .checkValidity() || !this.$refs.Sign.checkValidity()) {
           this.$toast.error("个人信息填报有误");
           return;
         }
@@ -207,6 +230,19 @@
             this.UserHeadImg = respone.Data;
           }
         }
+
+        if (this.$refs.ResumeFile.files.length != 0) {
+          let respone = await UpLoadResumeByFile('file', this.$refs.ResumeFile.files[0]);
+          if (respone == null || respone.Status == 500) {
+            this.$toast.error("简历上传失败");
+            return;
+          } else {
+            this.ResumeUrl = respone.Data;
+            this.ResumeName = this.ResumeUrl.substring(this.ResumeUrl.lastIndexOf("/") + 1, this.ResumeUrl
+              .lastIndexOf("."));
+          }
+        }
+
         let respone = await SaveUserInfo({
           Birthday: this.Birthday,
           BlogName: this.BlogName,
@@ -214,12 +250,14 @@
           Introduction: this.Introduction,
           Sex: this.Sex,
           HeadImgUrl: this.UserHeadImg,
-          Sign:this.Sign
+          Sign: this.Sign,
+          ResumeUrl: this.ResumeUrl,
+          ResumeName: this.ResumeName
         });
         if (respone != null && respone.Status == 200) {
-          if(this.$route.params.blogname==undefined)
-          this.$router.push("/view/index/" + this.BlogName);
-          else{
+          if (this.$route.params.blogname == undefined)
+            this.$router.push("/view/index/" + this.BlogName);
+          else {
             this.$toast.success("保存成功!");
           }
         }
@@ -245,35 +283,21 @@
     },
     async mounted() {
       this.Birthday = this.$dayjs().format('YYYY-MM-DD');
-      let token = this.$cookie.get('token');
-      if (token == undefined) {
-        let that = this;
-        this.$toast.info("登陆信息已失效，请重新登陆");
-        setTimeout(() => {
-          that.$router.push("/view/login");
-        }, 1000);
-      } else {
-        if (this.$route.params.blogname == undefined) {
-          let respone = await SerializeJwt({
-            token
-          });
-          if (respone.Data.BlogName != null && respone.Data.BlogName != '') {
-            this.$router.push("/view/userinfo/" + respone.Data.BlogName);
-          }
-        } else {
-          this.BlogName = this.$route.params.blogname;
-          this.$refs.BlogName.readOnly = 'readonly';
-          let respone = await GetUserInfo();
-          if (respone != null && respone.Status == 200) {
-            let userDto = respone.Data;
-            this.UserName = userDto.UserName;
-            this.Sex = userDto.Sex;
-            this.Birthday = userDto.Birthday;
-            this.Introduction = userDto.Introduction;
-            this.Sign=userDto.Sign;
-            if (userDto.HeadImgUrl != '')
-              this.UserHeadImg = userDto.HeadImgUrl;
-          }
+      if (this.$route.params.blogname != undefined && this.Config.token != '') {
+        this.BlogName = this.$route.params.blogname;
+        this.$refs.BlogName.readOnly = 'readonly';
+        let respone = await GetUserInfo();
+        if (respone != null && respone.Status == 200) {
+          let userDto = respone.Data;
+          this.UserName = userDto.UserName;
+          this.Sex = userDto.Sex;
+          this.Birthday = userDto.Birthday;
+          this.Introduction = userDto.Introduction;
+          this.Sign = userDto.Sign;
+          if (userDto.HeadImgUrl != '')
+            this.UserHeadImg = userDto.HeadImgUrl;
+          this.ResumeUrl = userDto.ResumeUrl;
+          this.ResumeName = userDto.ResumeName;
         }
       }
       await this.GetVerifyRegex();

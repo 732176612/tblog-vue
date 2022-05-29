@@ -1,12 +1,11 @@
 /*
  * @Author: your name
  * @Date: 2022-01-28 16:29:07
- * @LastEditTime: 2022-03-13 14:58:18
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-28 15:47:01
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\utils.js
  */
-
 /**
  * @des: 获取网页链接参数
  * @param {网页链接} URL
@@ -43,12 +42,18 @@ function getObjectURL(file) {
     return url;
 }
 
-async function getToken() {
-    let token = await cookieStore.get("token");
-    if (token != null) {
-        return token.value;
+function getCookie(cookie_name) {
+    var allcookies = document.cookie;
+    var cookie_pos = allcookies.indexOf(cookie_name);
+    if (cookie_pos != -1) {
+        cookie_pos = cookie_pos + cookie_name.length + 1;
+        var cookie_end = allcookies.indexOf(";", cookie_pos);
+        if (cookie_end == -1) {
+            cookie_end = allcookies.length;
+        }
+        var value = unescape(allcookies.substring(cookie_pos, cookie_end));
     }
-    return token;
+    return value;
 }
 
 function sleep(ms) {
