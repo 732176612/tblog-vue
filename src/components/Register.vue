@@ -44,7 +44,7 @@
                             </div>
                             <div class="input-group mb-3" :class="IsSumbit||VCode.length!=0?'was-validated':''">
                                 <div class="input-group-prepend">
-                                    <loadingbtn class="btn-primary" style="background-color:var(--orange);
+                                    <loadingbtn class="btn-main" style="background-color:var(--orange);
                                 border-color:var(--orange)" :awaitAction="SendVCode" :btnText="VCodeTip"></loadingbtn>
                                 </div>
                                 <!-- /btn-group -->
@@ -56,7 +56,7 @@
                             </div>
                         </form>
                         <div class="d-grid gap-2 text-center mt-2 mb-3">
-                            <loadingbtn class="btn-block btn-primary" :awaitAction="RequestRegisterUser"
+                            <loadingbtn class="btn-block btn-main" :awaitAction="RequestRegisterUser"
                                 :btnText="'注册'">
                             </loadingbtn>
                         </div>

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-24 19:55:03
+ * @LastEditTime: 2022-05-31 19:19:48
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -98,7 +98,7 @@
             <div class="d-flex align-items-center justify-content-evenly h-100 p-1">
                 <loadingbtn class="btn btn-success rounded-pill" :awaitAction="OnClickSaveDraft" :btnText="'保存草稿'">
                 </loadingbtn>
-                <loadingbtn class="btn btn-primary rounded-pill" :awaitAction="OnClickSaveActicle" :btnText="'发布博客'">
+                <loadingbtn class="btn btn-main rounded-pill" :awaitAction="OnClickSaveActicle" :btnText="'发布博客'">
                 </loadingbtn>
             </div>
         </div>
@@ -117,7 +117,7 @@
                             placeholder="标签名(最长不超过10个字符)" pattern="^.{1,10}$" required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" @click="OnClickAddActicleTag">添加</button>
+                        <button type="button" class="btn btn-main" @click="OnClickAddActicleTag">添加</button>
                     </div>
                 </div>
             </div>

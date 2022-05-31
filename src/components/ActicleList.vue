@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-28 21:19:46
+ * @LastEditTime: 2022-05-31 19:47:17
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -25,7 +25,7 @@
                 <div class="card-header bg-white">
                     <ul class="nav text-center">
                         <li v-for="(item,index) in SortTags" :key="index" class="nav-item px-2 sortTag border-right"
-                            :style="(SelectSortTag==item.Key?'Color:var(--blue)':'')" @click="OnClickSortTag(item.Key)">
+                            :style="(SelectSortTag==item.Key?'Color:var(--main_color)':'')" @click="OnClickSortTag(item.Key)">
                             {{item.Value}}</li>
                         <li v-show="isSelf($route)" class="nav-item px-2 sortTag border-right"
                             :style="(ReleaseForm=='2'?'Color:var(--orange)':'')" @click="OnClickReleaseFormTag(2)">
@@ -215,7 +215,7 @@
     }
 
     .tag:hover {
-        background-color: var(--blue);
+        background-color: var(--main_color);
         cursor: pointer;
     }
 
@@ -232,7 +232,7 @@
     }
 
     .sortTag:hover {
-        color: var(--blue);
+        color: var(--main_color);
     }
 
     .content-main {

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-28 21:18:48
+ * @LastEditTime: 2022-05-31 20:37:31
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -9,18 +9,18 @@
 <template>
   <div class="row justify-content-center  h-100 px-2 pb-3" style="padding-top:100px">
     <div class="d-flex align-items-start">
-      <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-        <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home"
+      <div class="nav flex-column nav-pills nav-pills-main me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+        <button class="nav-link nav-link-main active" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home"
           type="button" role="tab" aria-controls="v-pills-home" aria-selected="true">个人信息</button>
-        <button class="nav-link" id="v-pills-edu-tab" data-bs-toggle="pill" data-bs-target="#v-pills-edu" type="button"
+        <button class="nav-link nav-link-main" id="v-pills-edu-tab" data-bs-toggle="pill" data-bs-target="#v-pills-edu" type="button"
           role="tab" aria-controls="v-pills-edu" aria-selected="false" v-show="BlogName.length!=0">教育经历</button>
-        <button class="nav-link" id="v-pills-skill-tab" data-bs-toggle="pill" data-bs-target="#v-pills-skill"
+        <button class="nav-link nav-link-main" id="v-pills-skill-tab" data-bs-toggle="pill" data-bs-target="#v-pills-skill"
           type="button" role="tab" aria-controls="v-pills-skill" aria-selected="false"
           v-show="BlogName.length!=0">专业技能</button>
-        <button class="nav-link" id="v-pills-work-tab" data-bs-toggle="pill" data-bs-target="#v-pills-work"
+        <button class="nav-link nav-link-main" id="v-pills-work-tab" data-bs-toggle="pill" data-bs-target="#v-pills-work"
           type="button" role="tab" aria-controls="v-pills-work" aria-selected="false"
           v-show="BlogName.length!=0">工作经历</button>
-        <button class="nav-link" id="v-pills-work-tab" data-bs-toggle="pill" data-bs-target="#v-pills-project"
+        <button class="nav-link nav-link-main" id="v-pills-work-tab" data-bs-toggle="pill" data-bs-target="#v-pills-project"
           type="button" role="tab" aria-controls="v-pills-project" aria-selected="false"
           v-show="BlogName.length!=0">项目经历</button>
       </div>
@@ -61,7 +61,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col  my-1">
+                  <div class="col my-2">
                     <label class="form-label">性别</label>
                     <div class="form-control d-flex">
                       <div class="form-check form-check-inline">
@@ -75,13 +75,13 @@
                     </div>
                   </div>
 
-                  <div class="col  my-1">
+                  <div class="col  my-2">
                     <label class="form-label">生日</label>
                     <input type="date" class="form-control" v-model="Birthday">
                   </div>
                 </div>
 
-                <div class="row my-1">
+                <div class="row my-2">
                   <div class="col">
                     <label class="form-label">签名</label>
                     <textarea ref="Sign" type="text" class="form-control " placeholder="签名"
@@ -92,7 +92,7 @@
                   </div>
                 </div>
 
-                <div class="row my-1">
+                <div class="row my-2">
                   <div class="col">
                     <label class="form-label">个人介绍</label>
                     <textarea ref="Introduction" type="text" class="form-control " placeholder="个人介绍"
@@ -104,21 +104,46 @@
                   </div>
                 </div>
 
-                <div class="row my-1">
+                <div class="row my-2">
                   <div class="col">
                     <label class="form-label">上传简历</label>
                     <div>
                       <a :href="ResumeUrl" target="_blank">{{ResumeName}}</a>
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group mt-1 mb-3">
                       <input ref="ResumeFile" type="file" class="form-control" @change="OnResumeFileChage">
                     </div>
                   </div>
                 </div>
 
 
+                <div class="row my-1">
+                  <div class="col">
+                    <label class="form-label">主题颜色</label>
+                    <div class="input mb-3">
+                      <input type="color" ref="StyleColor" class="form-control form-control-color" v-model="StyleColor"
+                        title="Choose your color" id="colorPicker">
+                    </div>
+                  </div>
+                </div>
+
+
+
+                <div class="row my-1">
+                  <div class="col">
+                    <label class="form-label">上传背景图片</label>
+                    <div>
+                      <img ref="ViewBackgroundImg" class="backgroundImg" :src="BackgroundUrl" alt="上传背景图片"
+                        @click="this.$refs.BackgroundImg.click()" />
+                    </div>
+                    <div class="input mt-1 mb-2">
+                      <input type="file" ref="BackgroundImg" @change="OnBackgroundImageChage" />
+                    </div>
+                  </div>
+                </div>
+
                 <div class="d-grid mt-3">
-                  <loadingbtn class="btn-block btn-primary" :awaitAction="OnClickOpenBlog"
+                  <loadingbtn class="btn-block btn-main" :awaitAction="OnClickOpenBlog"
                     :btnText="BlogName.length==0?'开通博客':'保存'">
                   </loadingbtn>
                 </div>
@@ -157,6 +182,12 @@
   import EduInfo from './EduInfo.vue'
   import SkillInfo from './SkillInfo.vue'
   import headImgUrl from "../assets/img/Logo.png";
+  import bgImgUrl from "../assets/img/icons/bg.svg";
+  import {
+    ref,
+    computed,
+    watch
+  } from 'vue';
   export default {
     name: "UserInfo",
     components: {
@@ -178,7 +209,9 @@
         IsSumbitUserInfo: false,
         Sign: "",
         ResumeUrl: "",
-        ResumeName: ""
+        ResumeName: "",
+        StyleColor: '',
+        BackgroundUrl: bgImgUrl
       }
     },
     methods: {
@@ -205,11 +238,24 @@
           this.$refs.ViewHeadImg.src = imgUrl;
         }
       },
+      OnBackgroundImageChage() {
+        if (this.$refs.BackgroundImg.files.length >= 1) {
+          let file = this.$refs.BackgroundImg.files[0];
+          if (file.size > 2 * 1024 * 1024) {
+            this.$toast.warning("图片大小不能超过2MB");
+            this.$refs.BackgroundImg.Value = '';
+            return;
+          }
+          let imgUrl = getObjectURL(file);
+          this.$refs.ViewBackgroundImg.src = imgUrl;
+          console.log(this.$refs.ViewBackgroundImg.src)
+        }
+      },
       OnResumeFileChage() {
         if (this.$refs.ResumeFile.files.length >= 1) {
           let file = this.$refs.ResumeFile.files[0];
-          if (file.size > 1 * 1024 * 1024) {
-            this.$toast.warning("简历大小不能超过1MB");
+          if (file.size > 2 * 1024 * 1024) {
+            this.$toast.warning("简历大小不能超过2MB");
             this.$refs.ResumeFile.Value = '';
           }
         }
@@ -231,6 +277,16 @@
           }
         }
 
+        if (this.$refs.BackgroundImg.files.length != 0) {
+          let respone = await UpLoadImgByFile('backimg', this.$refs.BackgroundImg.files[0]);
+          if (respone == null || respone.Status == 500) {
+            this.$toast.error("头像上传失败");
+            return;
+          } else {
+            this.BackgroundUrl = respone.Data;
+          }
+        }
+
         if (this.$refs.ResumeFile.files.length != 0) {
           let respone = await UpLoadResumeByFile('file', this.$refs.ResumeFile.files[0]);
           if (respone == null || respone.Status == 500) {
@@ -242,7 +298,7 @@
               .lastIndexOf("."));
           }
         }
-
+        console.log(this.StyleColor);
         let respone = await SaveUserInfo({
           Birthday: this.Birthday,
           BlogName: this.BlogName,
@@ -252,7 +308,9 @@
           HeadImgUrl: this.UserHeadImg,
           Sign: this.Sign,
           ResumeUrl: this.ResumeUrl,
-          ResumeName: this.ResumeName
+          ResumeName: this.ResumeName,
+          BackgroundUrl: this.BackgroundUrl,
+          StyleColor: this.StyleColor
         });
         if (respone != null && respone.Status == 200) {
           if (this.$route.params.blogname == undefined)
@@ -298,18 +356,30 @@
             this.UserHeadImg = userDto.HeadImgUrl;
           this.ResumeUrl = userDto.ResumeUrl;
           this.ResumeName = userDto.ResumeName;
+          this.BackgroundUrl = userDto.BackgroundUrl;
+          this.StyleColor = userDto.StyleColor;
         }
       }
       await this.GetVerifyRegex();
+      document.getElementById('colorPicker').addEventListener('input', () => {
+        ChangeStyleColor(this.StyleColor);
+      });
     }
   }
 </script>
 <style>
   .userHeadImg {
-    border: 5px solid var(--blue);
+    border: 5px solid var(--main_light_color);
     margin: 0 auto;
     height: 120px;
     width: 120px;
+  }
+
+  .backgroundImg {
+    margin: 0 auto;
+    max-height: 300px;
+    width: auto;
+    max-width: 100%;
   }
 
   .userHeadImg:hover {
@@ -330,20 +400,20 @@
 
   @keyframes selectHeadImg {
     0% {
-      border-color: var(--orange);
+      border-color: var(--main_dark_color);
     }
 
     66% {
-      border-color: var(--blue);
+      border-color: var(--main_light_color);
     }
 
     100% {
-      border-color: var(--orange);
+      border-color: var(--main_dark_color);
     }
   }
 
   .slider-selection {
-    background: var(--blue);
+    background: var(--main_color);
   }
 
   .slider-handle {
@@ -357,7 +427,22 @@
   }
 
   .inputTitle {
-    border-left: 5px solid var(--blue);
+    border-left: 5px solid var(--main_color);
     padding-left: 5px;
+  }
+
+  .nav-link-main {
+    color: var(--main_color) !important;
+  }
+
+  .nav-link-main:hover,
+  .nav-link-main:focus {
+    color: var(--main_dark_color) !important;
+  }
+
+  .nav-pills-main .nav-link.active,
+  .nav-pills-main .show>.nav-link {
+    color: #fff !important;
+    background-color: var(--main_color) !important;
   }
 </style>

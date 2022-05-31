@@ -29,7 +29,7 @@
             </div>
 
             <div class="d-grid gap-2 mt-2 mb-2">
-              <loadingbtn class="btn-block btn-primary" :awaitAction="OnClickLoginUser" :btnText="'登录'"
+              <loadingbtn class="btn-block btn-main" :awaitAction="OnClickLoginUser" :btnText="'登录'"
                 style="height:3rem">
               </loadingbtn>
             </div>

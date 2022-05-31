@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-28 21:18:06
+ * @LastEditTime: 2022-05-31 19:35:29
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -18,7 +18,7 @@
           </button>
 
           <div class="collapse navbar-collapse" id="navbarsExample07XL">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto">
               <li class="nav-item" v-for="(item,index) in Menus" :key="index">
                 <a class="nav-link" href="#" :class="$route.name.indexOf(item.Name)!=-1?'active':''"
                   @click="OnClickMenuBtn(item)">{{item.Name}}</a>
@@ -33,7 +33,7 @@
                   <li>
                     <hr class="dropdown-divider">
                   </li>
-                  <li ><a class="dropdown-item" @click="OnClickLogOut">注销</a></li>
+                  <li><a class="dropdown-item" @click="OnClickLogOut">注销</a></li>
                 </ul>
               </li>
             </ul>
@@ -77,7 +77,7 @@
           IsInit: false,
         },
         Menus: [],
-        NavClass: "bg-primary"
+        NavClass: "bg-main"
       }
     },
     methods: {
@@ -93,6 +93,9 @@
           let model = respone.Data;
           this.UserDto.UserName = model.UserName;
           this.UserDto.BlogName = model.BlogName;
+          if (model.StyleColor != undefined && model.StyleColor != '') {
+            ChangeStyleColor(model.StyleColor);
+          }
         } else {
           this.$cookie.set('AutoLogin', 'false');
           this.$router.push("/view/login");
@@ -100,7 +103,7 @@
       },
       OnClickLogOut() {
         LogOut();
-        this.Config.token='';
+        this.Config.token = '';
         this.$cookie.remove('token');
         this.$router.push("/view/login");
       },
@@ -108,7 +111,7 @@
         location.href = item.Url + "/" + this.$route.params.blogname;
       },
       async CheckToken() {
-        this.Config.token=getCookie('token');
+        this.Config.token = getCookie('token');
         if (this.$route.params.blogname == undefined) {
           if (this.Config.token == '') {
             this.$toast.warning('您还未登陆，请登陆');
@@ -134,8 +137,8 @@
       next(async _ => {
         let that = _;
         await that.CheckToken();
-        if (that.$route.path.indexOf("index") == -1 || window.scrollY > 550) {
-          that.NavClass = 'bg-primary';
+        if (that.$route.path.indexOf("index") == -1 || window.scrollY > 400) {
+          that.NavClass = 'bg-main';
         } else {
           that.NavClass = '';
         }
@@ -143,8 +146,8 @@
     },
     mounted() {
       setInterval(() => {
-        if (this.$route.path.indexOf("index") == -1 || window.scrollY > 550) {
-          this.NavClass = 'bg-primary';
+        if (this.$route.path.indexOf("index") == -1 || window.scrollY > 400) {
+          this.NavClass = 'bg-main';
         } else {
           this.NavClass = '';
         }

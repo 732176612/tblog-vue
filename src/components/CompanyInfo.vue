@@ -10,7 +10,7 @@
     <div class="card">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <label class="tagTitle">工作经历</label>
-            <button class="btn btn-primary" style="font-size:1.25em;font-weight: 700;" @click="OnClickAddCompanyInfo"><i
+            <button class="btn btn-main" style="font-size:1.25em;font-weight: 700;" @click="OnClickAddCompanyInfo"><i
                     class="bi bi-plus"></i></button>
         </div>
         <div class="card-body pt-0">
@@ -92,7 +92,7 @@
                 </div>
             </div>
             <div class="d-grid mt-3">
-                <loadingbtn class="btn-block btn-primary" :awaitAction="OnClickSaveButton" :btnText="'保存'">
+                <loadingbtn class="btn-block btn-main" :awaitAction="OnClickSaveButton" :btnText="'保存'">
                 </loadingbtn>
             </div>
         </div>

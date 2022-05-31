@@ -40,10 +40,10 @@
               </div>
 
               <div class="d-grid gap-2 social-auth-links text-center mt-2 mb-4">
-                <loadingbtn v-show="!IsSumbit" class="btn-block btn-primary" :awaitAction="OnClickRequestRecoverPwd"
+                <loadingbtn v-show="!IsSumbit" class="btn-block btn-main" :awaitAction="OnClickRequestRecoverPwd"
                   :btnText="'找回密码'" style="height:3rem">
                 </loadingbtn>
-                <loadingbtn v-show="IsSumbit" class="btn-block btn-primary" :awaitAction="OnClickResponeRecoverPwd"
+                <loadingbtn v-show="IsSumbit" class="btn-block btn-main" :awaitAction="OnClickResponeRecoverPwd"
                   :btnText="'重设密码'" style="height:3rem">
                 </loadingbtn>
               </div>

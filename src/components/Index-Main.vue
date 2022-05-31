@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-05 22:22:35
- * @LastEditTime: 2022-05-29 16:45:49
+ * @LastEditTime: 2022-05-31 19:40:00
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\IndexMain.vue
@@ -11,7 +11,8 @@
         <div class="profile-page">
             <div class="wrapper">
                 <div class="page-header page-header-small" filter-color="green">
-                    <div class="page-header-image" data-parallax="true">
+                    <div class="page-header-image" :style="'background-image: url('+UserDto.BackgroundUrl+')'"
+                        data-parallax="true">
                     </div>
                     <div class="container">
                         <div class="content-center">
@@ -21,8 +22,7 @@
                             </div>
                             <div class="h2 title">{{UserDto.UserName}}</div>
                             <p class="category text-white">{{UserDto.Sign}}</p>
-                            <a class="btn btn-primary aos-init " v-if="UserDto.ResumeUrl!=''" :href="UserDto.ResumeUrl"
-                                data-aos="zoom-in" data-aos-anchor="data-aos-anchor" target="_blank">下载简历</a>
+                            <button class="btn btn-main" v-if="UserDto.ResumeUrl!=''" :href="UserDto.ResumeUrl" target="_blank">下载简历</button>
                         </div>
                     </div>
                 </div>
@@ -78,8 +78,8 @@
                                 <div v-show="(i-1)*2+(j-1)<SkillInfos.length"
                                     class="progress-container progress-primary"><span
                                         class="progress-badge">{{SkillInfos[(i-1)*2+(j-1)].Skill}}</span>
-                                    <div class="progress">
-                                        <div class="progress-bar progress-bar-primary aos-init" data-aos="progress-full"
+                                    <div class="progress bg-main-light">
+                                        <div class="progress-bar bg-main aos-init" data-aos="progress-full"
                                             data-aos-offset="1" data-aos-duration="2000" role="progressbar"
                                             aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
                                             :style="'width: '+SkillInfos[(i-1)*2+(j-1)].Progress+'%;'"></div><span
@@ -98,7 +98,7 @@
                 <div class="h4 text-center mb-4 title">工作经历</div>
                 <div class="card" v-for="(item,index) in CompanyInfos" :key="index">
                     <div class="row">
-                        <div class="col-md-3 bg-primary aos-init" data-aos="fade-right" data-aos-offset="50"
+                        <div class="col-md-3 bg-main aos-init" data-aos="fade-right" data-aos-offset="50"
                             data-aos-duration="500">
                             <div class="card-body cc-experience-header">
                                 <p>{{item.Company}}</p>
@@ -124,7 +124,7 @@
                 <div class="h4 text-center mb-4 title">项目经历</div>
                 <div class="card" v-for="(item,index) in ProjectInfos" :key="index">
                     <div class="row">
-                        <div class="col-md-3 bg-primary aos-init" data-aos="fade-right" data-aos-offset="50"
+                        <div class="col-md-3 bg-main aos-init" data-aos="fade-right" data-aos-offset="50"
                             data-aos-duration="500">
                             <div class="card-body cc-experience-header">
                                 <div class="h5">{{item.Project}}</div>
@@ -151,7 +151,7 @@
                 <div class="h4 text-center mb-4 title">教育经历</div>
                 <div class="card" v-for="(item,index) in EduInfos" :key="index">
                     <div class="row">
-                        <div class="col-md-3 bg-primary aos-init" data-aos="fade-right" data-aos-offset="50"
+                        <div class="col-md-3 bg-main aos-init" data-aos="fade-right" data-aos-offset="50"
                             data-aos-duration="500">
                             <div class="card-body cc-experience-header">
                                 <div class="h5">{{item.School}}</div>
@@ -192,7 +192,9 @@
         useRouter
     } from 'vue-router'
     export default {
-        props: ['UserDto', 'UserHeadOnLoad', 'IsLoadImg', 'SkillInfos', 'CompanyInfos', 'ProjectInfos', 'EduInfos','IsApartEdu'],
+        props: ['UserDto', 'UserHeadOnLoad', 'IsLoadImg', 'SkillInfos', 'CompanyInfos', 'ProjectInfos', 'EduInfos',
+            'IsApartEdu'
+        ],
         setup(props) {
             const UserDto = ref({});
             const $route = useRoute()
@@ -202,7 +204,7 @@
             const ProjectInfos = ref([]);
             const IsLoadImg = ref(false);
             const EduInfos = ref([]);
-            const IsApartEdu=ref(false);
+            const IsApartEdu = ref(false);
             onMounted(async () => {
                 let respone = await GetUserInfo($route.params.blogname);
                 if (respone != null && respone.Status == 200) {
@@ -232,9 +234,8 @@
                 respone = await GetEduInfo($route.params.blogname);
                 if (respone.Status == 200) {
                     EduInfos.value = respone.Data;
-                    if(EduInfos.value.length==1&&EduInfos.value[0].Introduction=='')
-                    {
-                        IsApartEdu.value=true;
+                    if (EduInfos.value.length == 1 && EduInfos.value[0].Introduction == '') {
+                        IsApartEdu.value = true;
                     }
                 }
             });
@@ -270,7 +271,7 @@
     }
 
     .progress-container .progress-badge {
-        color: #888;
+        color: #000;
         font-size: 0.8571em;
         text-transform: uppercase;
     }
@@ -287,54 +288,15 @@
     .progress-container .progress .progress-bar {
         -webkit-box-shadow: none;
         box-shadow: none;
-        background-color: #888;
+        background-color: #000;
     }
 
     .progress-container .progress .progress-value {
         position: absolute;
         top: 2px;
         right: 0;
-        color: #888;
+        color: #000;
         font-size: 0.8571em;
-    }
-
-    .progress-container.progress-neutral .progress {
-        background: rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-container.progress-neutral .progress-bar {
-        background: #FFFFFF;
-    }
-
-    .progress-container.progress-neutral .progress-value,
-    .progress-container.progress-neutral .progress-badge {
-        color: #FFFFFF;
-    }
-
-    .progress-container.progress-primary .progress {
-        background: rgba(3, 169, 244, 0.4);
-    }
-
-    .progress-container.progress-primary .progress-bar {
-        background: var(--blue);
-    }
-
-    .progress-container.progress-primary .progress-value,
-    .progress-container.progress-primary .progress-badge {
-        color: var(--blue);
-    }
-
-    .progress-container.progress-info .progress {
-        background: rgba(44, 168, 255, 0.3);
-    }
-
-    .progress-container.progress-info .progress-bar {
-        background: #2CA8FF;
-    }
-
-    .progress-container.progress-info .progress-value,
-    .progress-container.progress-info .progress-badge {
-        color: #2CA8FF;
     }
 
     .progress-container {
@@ -417,7 +379,6 @@
         width: 100%;
         height: 100%;
         z-index: -1;
-        background-image: url('../assets/img/bg.jpg');
         transform: translate3d(0px, 0px, 0px);
     }
 
@@ -473,8 +434,8 @@
 
     .page-header {
         background: rgba(44, 44, 44, 0.2);
-        background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 44, 44, 0.2)), to(#03a9f480));
-        background: linear-gradient(0deg, rgba(44, 44, 44, 0.2), #03a9f480);
+        background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 44, 44, 0.2)), to(var(--main_dark_color)));
+        background: linear-gradient(0deg, rgba(44, 44, 44, 0.2),var(--main_dark_color));
     }
 
     .page-header .btn {
@@ -524,7 +485,7 @@
 
     .cc-profile-image a:before {
         content: "";
-        border: 15px solid rgba(3, 169, 244, 0.6);
+        border: 15px solid var(--main_dark_color);
         border-radius: 50%;
         height: 180px;
         width: 180px;

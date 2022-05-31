@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-01-28 16:29:07
- * @LastEditTime: 2022-05-28 15:47:01
+ * @LastEditTime: 2022-05-31 19:28:33
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\utils.js
@@ -58,4 +58,45 @@ function getCookie(cookie_name) {
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
+}
+
+//hex颜色转rgb颜色
+function HexToRgb(str) {
+    var r = /^#?[0-9A-F]{6}$/;
+    str = str.replace("#", "");
+    var hxs = str.match(/../g);
+    for (var i = 0; i < 3; i++) hxs[i] = parseInt(hxs[i], 16);
+    return hxs;
+}
+
+//GRB颜色转Hex颜色
+function RgbToHex(a, b, c) {
+    var r = /^d{1,3}$/;
+    var hexs = [a.toString(16), b.toString(16), c.toString(16)];
+    for (var i = 0; i < 3; i++)
+        if (hexs[i].length == 1) hexs[i] = "0" + hexs[i];
+    return "#" + hexs.join("");
+}
+
+//得到hex颜色值为color的减淡颜色值，level为加深的程度，限0-1之间
+function GetLightColor(color, level) {
+    var r = /^#?[0-9A-F]{6}$/;
+    var rgbc = HexToRgb(color);
+    for (var i = 0; i < 3; i++) rgbc[i] = Math.floor((255 - rgbc[i]) * level + rgbc[i]);
+    return RgbToHex(rgbc[0], rgbc[1], rgbc[2]);
+}
+
+//得到hex颜色值为color的加深颜色值，level为加深的程度，限0-1之间
+function getDarkColor(color, level) {
+    var r = /^#?[0-9A-F]{6}$/;
+    var rgbc = this.HexToRgb(color.toUpperCase());
+    for (var i = 0; i < 3; i++) rgbc[i] = Math.floor(rgbc[i] * (1 - level));
+    return this.RgbToHex(rgbc[0], rgbc[1], rgbc[2]);
+}
+
+//改变主题颜色
+function ChangeStyleColor(color) {
+    document.documentElement.style.setProperty("--main_color", color);
+    document.documentElement.style.setProperty("--main_dark_color", getDarkColor(color, 0.5));
+    document.documentElement.style.setProperty("--main_light_color", GetLightColor(color, 0.5));
 }

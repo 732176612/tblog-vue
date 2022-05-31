@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-16 15:31:30
- * @LastEditTime: 2022-05-28 19:53:01
+ * @LastEditTime: 2022-05-30 23:23:52
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\main.js
@@ -52,25 +52,25 @@ app.config.globalProperties.Config = {
 
   _token: '',
   get token() {
-    this._token=getCookie('token');
-    if(this._token==undefined){
-      this._token='';
+    this._token = getCookie('token');
+    if (this._token == undefined) {
+      this._token = '';
     }
     return this._token;
   },
-  set token(val){
-    if(val==undefined){
-      val='';
+  set token(val) {
+    if (val == undefined) {
+      val = '';
     }
-    this._token=val;
+    this._token = val;
   },
 
-  _userSelf:{},
-  get userSelf(){
+  _userSelf: {},
+  get userSelf() {
     return this._userSelf;
   },
-  set userSelf(val){
-    this._userSelf=val;
+  set userSelf(val) {
+    this._userSelf = val;
   }
 };
 app.config.globalProperties.isSelf = function (route) {
