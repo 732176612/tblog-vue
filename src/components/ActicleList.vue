@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-31 19:47:17
+ * @LastEditTime: 2022-06-04 18:16:47
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -25,13 +25,14 @@
                 <div class="card-header bg-white">
                     <ul class="nav text-center">
                         <li v-for="(item,index) in SortTags" :key="index" class="nav-item px-2 sortTag border-right"
-                            :style="(SelectSortTag==item.Key?'Color:var(--main_color)':'')" @click="OnClickSortTag(item.Key)">
+                            :style="(SelectSortTag==item.Key?'Color:var(--main_color)':'')"
+                            @click="OnClickSortTag(item.Key)">
                             {{item.Value}}</li>
                         <li v-show="isSelf($route)" class="nav-item px-2 sortTag border-right"
                             :style="(ReleaseForm=='2'?'Color:var(--orange)':'')" @click="OnClickReleaseFormTag(2)">
                             私密</li>
-                        <li v-show="isSelf($route)" class="nav-item px-2 sortTag" :style="(ReleaseForm=='3'?'Color:var(--orange)':'')"
-                            @click="OnClickReleaseFormTag(3)">
+                        <li v-show="isSelf($route)" class="nav-item px-2 sortTag"
+                            :style="(ReleaseForm=='3'?'Color:var(--orange)':'')" @click="OnClickReleaseFormTag(3)">
                             草稿</li>
                     </ul>
                 </div>
@@ -67,6 +68,11 @@
                                 </div>
                             </div>
                         </Mescroll>
+                    </div>
+                    <div v-if="ActicleList.length==0&&ReleaseForm!=2&&ReleaseForm!=3" class="ListEmptyTip">
+                        <a v-show="isSelf($route)"
+                            :href="'/view/acticleEditor/'+$route.params.blogname">--快来写你的第一篇文章吧！--</a>
+                        <span v-show="isSelf($route)==false">该博主太懒了，一篇博客都没写呢~</span>
                     </div>
                 </div>
             </div>
@@ -286,5 +292,12 @@
         margin-left: 24px;
         height: 120px;
         width: 120px;
+    }
+
+    .ListEmptyTip {
+        width: 100%;
+        text-align: center;
+        height: 100px;
+        line-height: 100px;
     }
 </style>

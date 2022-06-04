@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-31 19:35:29
+ * @LastEditTime: 2022-06-04 18:21:29
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -24,6 +24,7 @@
                   @click="OnClickMenuBtn(item)">{{item.Name}}</a>
               </li>
               <li v-if="Config.token==''"><a class="nav-link" href="/view/login">登陆</a></li>
+              <li v-if="Config.token!=''&&isSelf($route)==false"><a class="nav-link" :href="'/view/index/'+Config.userSelf.BlogName">回到我的博客</a></li>
               <li class="nav-item dropdown" v-if="Config.token!=''">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown"
                   aria-expanded="false">个人中心</a>
@@ -101,6 +102,16 @@
           this.$router.push("/view/login");
         }
       },
+      async RefreshUserSelf() {
+        if (this.Config.token != '') {
+          let respone = await SerializeJwt({
+            "token": this.Config.token
+          });
+          if (respone.Data.BlogName != null && respone.Data.BlogName != '') {
+            this.Config.userSelf = respone.Data;
+          }
+        }
+      },
       OnClickLogOut() {
         LogOut();
         this.Config.token = '';
@@ -112,17 +123,14 @@
       },
       async CheckToken() {
         this.Config.token = getCookie('token');
+        await this.RefreshUserSelf();
         if (this.$route.params.blogname == undefined) {
           if (this.Config.token == '') {
             this.$toast.warning('您还未登陆，请登陆');
             await this.$router.push("/view/login");
           } else {
-            let respone = await SerializeJwt({
-              "token": this.Config.token
-            });
-            if (respone.Data.BlogName != null && respone.Data.BlogName != '') {
-              this.Config.userSelf = respone.Data;
-              await this.$router.push("/view/index/" + respone.Data.BlogName);
+            if (this.Config.userSelf.BlogName != null && this.Config.userSelf.BlogName != '') {
+              await this.$router.push("/view/index/" + this.Config.userSelf.BlogName);
             } else {
               await this.$router.push("/view/userinfo");
             }

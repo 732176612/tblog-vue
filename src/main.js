@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-16 15:31:30
- * @LastEditTime: 2022-05-30 23:23:52
+ * @LastEditTime: 2022-06-04 18:06:18
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\main.js
@@ -29,6 +29,7 @@ import cookie from 'js-cookie'
 import AOS from "aos";
 import "../node_modules/aos/dist/aos.css";
 
+import 'default-passive-events'
 
 const app = createApp(App)
 const router = createRouter(createWebHistory())
@@ -38,9 +39,7 @@ router.push = function push(location) {
 }
 app.use(router)
 app.use(Toast)
-app.AOS = new AOS.init({
-  disable: "phone"
-});
+app.AOS = new AOS.init();
 app.use(AOS)
 
 dayjs.locale('zh-cn')
@@ -73,7 +72,7 @@ app.config.globalProperties.Config = {
     this._userSelf = val;
   }
 };
-app.config.globalProperties.isSelf = function (route) {
+app.config.globalProperties.isSelf = function (route) { //当前博客是否属于登陆用户的
   return app.config.globalProperties.Config.userSelf.BlogName == route.params.blogname;
 };
 
@@ -98,3 +97,8 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
   NProgress.done()
 })
+
+// import VConsole from 'vconsole';
+// if (location.host.indexOf('tblogtest') != -1 || location.host.indexOf('local') != -1) {
+//   const vConsole = new VConsole();
+// }

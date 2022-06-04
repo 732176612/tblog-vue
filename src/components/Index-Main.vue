@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-05 22:22:35
- * @LastEditTime: 2022-05-31 19:40:00
+ * @LastEditTime: 2022-06-04 18:09:08
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\IndexMain.vue
@@ -11,7 +11,7 @@
         <div class="profile-page">
             <div class="wrapper">
                 <div class="page-header page-header-small" filter-color="green">
-                    <div class="page-header-image" :style="'background-image: url('+UserDto.BackgroundUrl+')'"
+                    <div class="page-header-image" :style="'background-image: url('+(UserDto.BackgroundUrl)+')'"
                         data-parallax="true">
                     </div>
                     <div class="container">
@@ -22,7 +22,8 @@
                             </div>
                             <div class="h2 title">{{UserDto.UserName}}</div>
                             <p class="category text-white">{{UserDto.Sign}}</p>
-                            <button class="btn btn-main" v-if="UserDto.ResumeUrl!=''" :href="UserDto.ResumeUrl" target="_blank">下载简历</button>
+                            <a class="btn btn-main" v-if="UserDto.ResumeUrl!=''" :href="UserDto.ResumeUrl"
+                                target="_blank">下载简历</a>
                         </div>
                     </div>
                 </div>
@@ -41,7 +42,7 @@
                         <div class="col-lg-6 col-md-12">
                             <div class="card-body">
                                 <div class="h4 mt-0 title">基本信息</div>
-                                <div class="row mt-1">
+                                <div class="row mt-1" v-show="UserDto.Age!='0'">
                                     <div class="col-sm-4"><strong class="text-uppercase">年龄:</strong></div>
                                     <div class="col-sm-8">{{UserDto.Age}}</div>
                                 </div>
@@ -49,7 +50,7 @@
                                     <div class="col-sm-4"><strong class="text-uppercase">邮箱:</strong></div>
                                     <div class="col-sm-8">{{UserDto.Email}}</div>
                                 </div>
-                                <div class="row mt-2">
+                                <div class="row mt-2" v-show="UserDto.Phone!=''">
                                     <div class="col-sm-4"><strong class="text-uppercase">手机:</strong></div>
                                     <div class="col-sm-8">{{UserDto.Phone}}</div>
                                 </div>
@@ -73,9 +74,9 @@
                 <div class="h4 text-center mb-4 title">专业技能</div>
                 <div class="card aos-init " data-aos="fade-up" data-aos-anchor-placement="top-bottom">
                     <div class="card-body">
-                        <div class="row" v-for="i in SkillInfos.length/2" :key="i">
+                        <div class="row" v-for="i in Math.ceil(SkillInfos.length/2)" :key="i">
                             <div class="col-md-6" v-for="j in 2" :key="j">
-                                <div v-show="(i-1)*2+(j-1)<SkillInfos.length"
+                                <div v-if="(i-1)*2+(j-1)<SkillInfos.length"
                                     class="progress-container progress-primary"><span
                                         class="progress-badge">{{SkillInfos[(i-1)*2+(j-1)].Skill}}</span>
                                     <div class="progress bg-main-light">
@@ -146,7 +147,7 @@
             </div>
         </div>
 
-        <div class="section" v-show="!IsApartEdu">
+        <div class="section" v-show="EduInfos.length!=0&&!IsApartEdu">
             <div class="container cc-experience">
                 <div class="h4 text-center mb-4 title">教育经历</div>
                 <div class="card" v-for="(item,index) in EduInfos" :key="index">
@@ -191,6 +192,7 @@
         useRoute,
         useRouter
     } from 'vue-router'
+    import BackgroundUrl from '../assets/img/defaultbg.jpg'
     export default {
         props: ['UserDto', 'UserHeadOnLoad', 'IsLoadImg', 'SkillInfos', 'CompanyInfos', 'ProjectInfos', 'EduInfos',
             'IsApartEdu'
@@ -211,6 +213,9 @@
                     UserDto.value = respone.Data;
                     if (UserDto.value.HeadImgUrl == '')
                         IsLoadImg.value = false;
+                    if (UserDto.value.BackgroundUrl == '') {
+                        UserDto.value.BackgroundUrl = BackgroundUrl;
+                    }
                 } else {
                     this.$cookie.set('AutoLogin', 'false');
                     $router.push("/view/login");
@@ -273,7 +278,6 @@
     .progress-container .progress-badge {
         color: #000;
         font-size: 0.8571em;
-        text-transform: uppercase;
     }
 
     .progress-container .progress {
@@ -353,7 +357,7 @@
     }
 
     .section {
-        padding: 70px 0;
+        padding: 30px 0;
         position: relative;
         background: #FFFFFF;
     }
@@ -435,7 +439,7 @@
     .page-header {
         background: rgba(44, 44, 44, 0.2);
         background: -webkit-gradient(linear, left bottom, left top, from(rgba(44, 44, 44, 0.2)), to(var(--main_dark_color)));
-        background: linear-gradient(0deg, rgba(44, 44, 44, 0.2),var(--main_dark_color));
+        background: linear-gradient(0deg, rgba(44, 44, 44, 0.2), var(--main_dark_color));
     }
 
     .page-header .btn {

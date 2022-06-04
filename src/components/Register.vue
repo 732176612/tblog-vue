@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-30 16:34:52
- * @LastEditTime: 2022-02-11 20:02:53
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-06-04 16:04:37
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\Register.vue
 -->
@@ -56,8 +56,7 @@
                             </div>
                         </form>
                         <div class="d-grid gap-2 text-center mt-2 mb-3">
-                            <loadingbtn class="btn-block btn-main" :awaitAction="RequestRegisterUser"
-                                :btnText="'注册'">
+                            <loadingbtn class="btn-block btn-main" :awaitAction="RequestRegisterUser" :btnText="'注册'">
                             </loadingbtn>
                         </div>
                         <p class="mb-0">
@@ -156,12 +155,14 @@
                 }
 
                 if (this.VCodeTip == "发送验证码") {
-                    this.Countdown();
                     let phoneValid = this.$refs.Phone.checkValidity();
                     let phoneOrMail = phoneValid ? this.Phone : this.Mail;
-                    await RequestVCode({
+                    let respone = await RequestVCode({
                         phoneOrMail
                     });
+                    if (respone != undefined && respone.Status == 200) {
+                        this.Countdown();
+                    }
                 } else {
                     this.$toast.info("验证码已发送，请耐心等候");
                 }
@@ -171,14 +172,14 @@
                     this.VCodeTip = 60;
                     this.Countdown();
                 } else {
-                    if (this.VCodeTip > 1) {
+                    if (this.VCodeTip > 0) {
                         let that = this;
                         setTimeout(() => {
                             that.VCodeTip--;
                             that.Countdown()
                         }, 1000);
                     } else {
-                        this.VCodeTip == "发送验证码"
+                        this.VCodeTip = "发送验证码";
                     }
                 }
             },

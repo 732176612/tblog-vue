@@ -1,15 +1,15 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-28 18:55:41
+ * @LastEditTime: 2022-06-04 18:23:33
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-    <div class="row justify-content-center" style="padding-top:100px">
+    <div class="row justify-content-center" style="padding-top:80px">
         <div class="col-xl-10 col-lg-10 col-md-11 col-sm-12">
-            <div class="main rounded bg-white px-xl-5 px-3 py-4">
+            <div class="main rounded bg-white mx-xl-5 mx-3 px-xl-5 px-md-3 px-2 py-4">
                 <div class="title">{{Title}}</div>
                 <div class="header d-flex justify-content-between flex-wrap my-4">
                     <div class="header-right d-flex">

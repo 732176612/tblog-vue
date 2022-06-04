@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2021-10-16 15:31:30
- * @LastEditTime: 2022-03-20 18:43:11
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-06-04 16:15:37
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\index.html
 -->
@@ -12,7 +12,8 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" href="/favicon.ico" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no,maximum-scale=1.0,user-scalable=0">
   <link href="/mescroll/mescroll.min.css" rel="stylesheet" type="text/css">
   <title>TBlog</title>
 </head>
@@ -22,6 +23,32 @@
   <script type="module" src="/src/main.js"></script>
   <script src="/js/utils.js"></script>
   <script src="/mescroll/mescroll.min.js"></script>
+  <script>
+    document.documentElement.addEventListener(
+      "touchstart",
+      function (event) {
+        if (event.touches.length > 1) {
+          event.preventDefault();
+        }
+      }, {
+        passive: false
+      }
+    );
+    // 禁止双击放大
+    let lastTouchEnd = 0;
+    document.documentElement.addEventListener(
+      "touchend",
+      function (event) {
+        var now = Date.now();
+        if (now - lastTouchEnd <= 300) {
+          event.preventDefault();
+        }
+        lastTouchEnd = now;
+      }, {
+        passive: false
+      }
+    );
+  </script>
 </body>
 
 </html>

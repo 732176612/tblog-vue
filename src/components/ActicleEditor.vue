@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-05-31 19:19:48
+ * @LastEditTime: 2022-06-04 15:22:01
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-    <div class="row justify-content-center px-5 pb-3 w-100" style="padding-top:100px">
+    <div class="justify-content-center px-xl-5 px-lg-4 px-md-3 px-sm-2 px-2 pb-3 w-100" style="padding-top:80px">
         <div class="w-100">
             <form class="mb-4 needs-validation">
                 <div class="card">
@@ -95,7 +95,7 @@
             </form>
         </div>
         <div class="BottomNav">
-            <div class="d-flex align-items-center justify-content-evenly h-100 p-1">
+            <div class="d-flex align-items-center justify-content-evenly h-100 py-1">
                 <loadingbtn class="btn btn-success rounded-pill" :awaitAction="OnClickSaveDraft" :btnText="'保存草稿'">
                 </loadingbtn>
                 <loadingbtn class="btn btn-main rounded-pill" :awaitAction="OnClickSaveActicle" :btnText="'发布博客'">
@@ -323,6 +323,7 @@
         bottom: 0;
         width: 100vw;
         height: 4rem;
+        right:0;
         background-color: rgb(255, 255, 255);
         z-index: 1051;
         border-top: darkgray solid 1px;
