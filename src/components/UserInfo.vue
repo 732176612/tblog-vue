@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-06-04 18:03:46
+ * @LastEditTime: 2022-06-12 14:57:32
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -94,9 +94,9 @@
               <div class="row my-2">
                 <div class="col">
                   <label class="form-label">个人介绍</label>
-                  <textarea ref="Introduction" type="text" class="form-control " placeholder="个人介绍"
+                  <AutoTextArea ref="Introduction" type="text" class="form-control " placeholder="个人介绍"
                     :class="IsSumbitUserInfo||Introduction.length!=0?'was-validated':''" pattern="^.{0,140}$"
-                    v-model="Introduction"></textarea>
+                    v-model:value="Introduction"></AutoTextArea>
                   <div class="invalid-feedback">
                     长度不能超过140个字符
                   </div>
@@ -354,6 +354,18 @@
       document.getElementById('colorPicker').addEventListener('input', () => {
         ChangeStyleColor(this.StyleColor);
       });
+      let box = document.getElementsByClassName('tab-content')[0],
+        config = {
+          attributes: true,
+          attributeFilter: ['class'],
+          subtree: true
+        };
+      let observer = new MutationObserver(mutations => {
+        this.$nextTick(() => {
+          AutoExtendTextArea();
+        })
+      })
+      observer.observe(box, config)
     }
   }
 </script>

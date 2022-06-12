@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-06-04 18:23:33
+ * @LastEditTime: 2022-06-12 15:09:47
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -50,7 +50,7 @@
                     </button>
                 </div>
             </div>
-            
+
             <!-- 添加标签弹框 -->
             <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="TagModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -117,6 +117,7 @@
                         this.LikeNums = respone.Data.LikeNum;
                         this.LookNums = respone.Data.LookNum;
                         this.CBlogName = respone.Data.CBlogName;
+                        document.title = this.Title;
                     }
                 }
             },

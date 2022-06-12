@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-16 15:31:30
- * @LastEditTime: 2022-06-04 18:06:18
+ * @LastEditTime: 2022-06-12 15:10:15
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\main.js
@@ -42,6 +42,8 @@ app.use(Toast)
 app.AOS = new AOS.init();
 app.use(AOS)
 
+
+
 dayjs.locale('zh-cn')
 dayjs.extend(relativeTime)
 app.config.globalProperties.$toast = toast;
@@ -79,6 +81,8 @@ app.config.globalProperties.isSelf = function (route) { //当前博客是否属�
 import loadingBtn from './components/UI/LoadingBtn.vue'
 import CheckInput from './components/UI/CheckInput.vue'
 import Mescroll from './components/UI/Mescroll.vue'
+import AutoTextArea from "./components/UI/TextareaAutosize.vue";
+app.component('AutoTextArea', AutoTextArea);
 app.component('loadingbtn', loadingBtn);
 app.component('CheckInput', CheckInput);
 app.component('Mescroll', Mescroll);
@@ -91,8 +95,15 @@ import NProgress from "nprogress"
 import "nprogress/nprogress.css"
 router.beforeEach((to, from, next) => {
   NProgress.start()
-
   next()
+  console.log(to);
+  if(to.path.indexOf('acticleView')==-1){
+    if (to.params.blogname != undefined) {
+      document.title = to.params.blogname + '-' + to.name
+    } else {
+      document.title = to.name
+    }
+  }
 })
 router.afterEach(() => {
   NProgress.done()

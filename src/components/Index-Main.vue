@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-05 22:22:35
- * @LastEditTime: 2022-06-04 18:09:08
+ * @LastEditTime: 2022-06-08 19:35:16
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\IndexMain.vue
@@ -76,9 +76,8 @@
                     <div class="card-body">
                         <div class="row" v-for="i in Math.ceil(SkillInfos.length/2)" :key="i">
                             <div class="col-md-6" v-for="j in 2" :key="j">
-                                <div v-if="(i-1)*2+(j-1)<SkillInfos.length"
-                                    class="progress-container progress-primary"><span
-                                        class="progress-badge">{{SkillInfos[(i-1)*2+(j-1)].Skill}}</span>
+                                <div v-if="(i-1)*2+(j-1)<SkillInfos.length" class="progress-container progress-primary">
+                                    <span class="progress-badge">{{SkillInfos[(i-1)*2+(j-1)].Skill}}</span>
                                     <div class="progress bg-main-light">
                                         <div class="progress-bar bg-main aos-init" data-aos="progress-full"
                                             data-aos-offset="1" data-aos-duration="2000" role="progressbar"
@@ -532,5 +531,9 @@
         text-align: center;
         color: #fff;
         text-transform: uppercase;
+    }
+
+    p {
+        white-space: pre-wrap;
     }
 </style>

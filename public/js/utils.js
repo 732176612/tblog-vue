@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-01-28 16:29:07
- * @LastEditTime: 2022-05-31 19:28:33
+ * @LastEditTime: 2022-06-12 14:43:24
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\utils.js
@@ -99,4 +99,12 @@ function ChangeStyleColor(color) {
     document.documentElement.style.setProperty("--main_color", color);
     document.documentElement.style.setProperty("--main_dark_color", getDarkColor(color, 0.5));
     document.documentElement.style.setProperty("--main_light_color", GetLightColor(color, 0.5));
+}
+
+function AutoExtendTextArea() {
+    let textareas = document.getElementsByTagName('textarea');
+    for (var i = 0; i < textareas.length; i++) {
+        let textarea = textareas[i];
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
 }

@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-21 16:31:24
- * @LastEditTime: 2022-04-17 17:26:45
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-06-11 16:50:14
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\EduInfo.vue
 -->
@@ -50,9 +50,9 @@
                 <div class="row my-1">
                     <div class="col">
                         <label class="form-label">经历描述</label>
-                        <textarea type="text" class="form-control "
+                        <AutoTextArea type="text" class="form-control "
                             :class="IsSumbit||item.Introduction.length!=0?'was-validated':''" pattern="^.{0,140}$"
-                            v-model="item.Introduction"></textarea>
+                            v-model:value="item.Introduction"></AutoTextArea>
                         <div class="invalid-feedback">
                             长度不能超过140个字符
                         </div>
