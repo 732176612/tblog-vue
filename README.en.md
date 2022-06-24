@@ -1,36 +1,21 @@
-# tblog
+<!--
+ * @Author: FalseEndLess 732176612@qq.com
+ * @Date: 2022-02-28 16:32:49
+ * @LastEditors: FalseEndLess 732176612@qq.com
+ * @LastEditTime: 2022-06-24 19:53:39
+ * @FilePath: \tblog\README.en.md
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+This is a front-end project of personal blog with resume and articles.
+And https://gitee.com/FalseEndLess/tblog-api Back end projects are used together.
+The architecture adopts vite+vue3+bootstart
 
-#### Description
-{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
+run:
+Local debugging: NPM run locally
+Test and debugging: NPM run development
+Formal commissioning: NPM run production
 
-#### Software Architecture
-Software architecture description
+pack:
+npm run bulid
 
-#### Installation
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### Instructions
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### Contribution
-
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
-
-
-#### Gitee Feature
-
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+Open source aims to learn from each other. Thank you.

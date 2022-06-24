@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-21 16:31:24
- * @LastEditTime: 2022-06-11 16:49:12
+ * @LastEditTime: 2022-06-24 20:19:39
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\ProjectInfo.vue
@@ -19,8 +19,13 @@
                     <div class="col  my-1">
                         <div class="d-flex justify-content-between align-items-center">
                             <label class="form-label inputTitle">项目名称</label>
-                            <button class="btn btn-outline-danger btn-sm mb-2" style="height:2rem"
-                                @click="OnClickCloseButton(index)"><i class="bi bi-x"></i></button>
+                            <div>
+                                <button class="btn btn-outline-danger btn-sm mb-2 float-end" style="height:2rem;"
+                                    @click="OnClickCloseButton(index)"><i class="bi bi-x"></i></button>
+                                <button v-show="index!=0" class="btn btn-outline-primary btn-sm mb-2 float-end"
+                                    style="height:2rem;margin-right:15px" @click="OnClickUpButton(index)"><i
+                                        class="bi bi-arrow-up"></i></button>
+                            </div>
                         </div>
 
                         <input type="text" class="form-control"
@@ -67,9 +72,9 @@
                 <div class="row my-1">
                     <div class="col">
                         <label class="form-label">经历描述</label>
-                        <AutoTextArea ref="Introduction" type="text" class="form-control "
+                        <textarea ref="Introduction" type="text" class="form-control "
                             :class="IsSumbit||item.Introduction.length!=0?'was-validated':''" pattern="^.{0,140}$"
-                            v-model:value="item.Introduction"></AutoTextArea>
+                            v-model="item.Introduction"></textarea>
                         <div class="invalid-feedback">
                             长度不能超过140个字符
                         </div>
@@ -113,6 +118,15 @@
                     ...this.ProjectInfos.slice(0, index),
                     ...this.ProjectInfos.slice(index + 1)
                 ];
+            },
+            async OnClickUpButton(index) {
+                this.ProjectInfos = [
+                    ...this.ProjectInfos.slice(0, index-1),
+                    this.ProjectInfos[index],
+                    this.ProjectInfos[index-1],
+                    ...this.ProjectInfos.slice(index + 1)
+                ];
+                this.RefreshSlider();
             },
             async OnClickSaveButton() {
                 await SaveProjectInfo(this.ProjectInfos);

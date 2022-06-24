@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-01-28 16:29:07
- * @LastEditTime: 2022-06-12 14:43:24
+ * @LastEditTime: 2022-06-14 20:32:03
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\utils.js
@@ -106,5 +106,9 @@ function AutoExtendTextArea() {
     for (var i = 0; i < textareas.length; i++) {
         let textarea = textareas[i];
         textarea.style.height = textarea.scrollHeight + 'px';
+        textarea.addEventListener('input', (e) => {
+            console.log(e.target.scrollHeight)
+            textarea.style.height = e.target.scrollHeight + 'px';
+        });
     }
 }

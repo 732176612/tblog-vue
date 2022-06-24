@@ -94,9 +94,9 @@
               <div class="row my-2">
                 <div class="col">
                   <label class="form-label">个人介绍</label>
-                  <AutoTextArea ref="Introduction" type="text" class="form-control " placeholder="个人介绍"
+                  <textarea ref="Introduction" type="text" class="form-control " placeholder="个人介绍"
                     :class="IsSumbitUserInfo||Introduction.length!=0?'was-validated':''" pattern="^.{0,140}$"
-                    v-model:value="Introduction"></AutoTextArea>
+                    v-model="Introduction"></textarea>
                   <div class="invalid-feedback">
                     长度不能超过140个字符
                   </div>

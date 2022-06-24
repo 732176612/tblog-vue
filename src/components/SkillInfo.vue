@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-21 16:31:24
- * @LastEditTime: 2022-06-11 15:48:42
+ * @LastEditTime: 2022-06-24 20:08:25
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\SkillInfo.vue
@@ -22,8 +22,10 @@
                     </div>
                     <div class="col-9 my-1">
                         <label class="form-label">熟练度</label>
-                        <button class="btn btn-outline-danger btn-sm mb-2 float-end" style="height:2rem"
+                        <button  class="btn btn-outline-danger btn-sm mb-2 float-end" style="height:2rem;"
                             @click="OnClickCloseButton(index)"><i class="bi bi-x"></i></button>
+                        <button v-show="index!=0" class="btn btn-outline-primary btn-sm mb-2 float-end" style="height:2rem;margin-right:15px"
+                            @click="OnClickUpButton(index)"><i class="bi bi-arrow-up"></i></button>
                     </div>
                 </div>
 
@@ -81,6 +83,15 @@
             async OnClickCloseButton(index) {
                 this.SkillInfos = [
                     ...this.SkillInfos.slice(0, index),
+                    ...this.SkillInfos.slice(index + 1)
+                ];
+                this.RefreshSlider();
+            },
+            async OnClickUpButton(index) {
+                this.SkillInfos = [
+                    ...this.SkillInfos.slice(0, index-1),
+                    this.SkillInfos[index],
+                    this.SkillInfos[index-1],
                     ...this.SkillInfos.slice(index + 1)
                 ];
                 this.RefreshSlider();

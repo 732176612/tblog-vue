@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-03-21 16:31:24
- * @LastEditTime: 2022-06-11 16:50:14
+ * @LastEditTime: 2022-06-24 20:13:17
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\EduInfo.vue
@@ -10,8 +10,10 @@
     <div class="card">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <label class="tagTitle">教育经历</label>
-            <button class="btn btn-main" style="font-size:1.25em;font-weight: 700;" @click="OnClickAddEduInfo"><i
-                    class="bi bi-plus"></i></button>
+            <div>
+                <button class="btn btn-main" style="font-size:1.25em;font-weight: 700;" @click="OnClickAddEduInfo"><i
+                        class="bi bi-plus"></i></button>
+            </div>
         </div>
         <div class="card-body pt-0">
             <div class="needs-validation p-2 my-4" v-for="(item,index) in EduInfos" :key="index">
@@ -27,6 +29,11 @@
                     </div>
                     <div class="col  my-1">
                         <label class="form-label">专业</label>
+                        <button class="btn btn-outline-danger btn-sm mb-2 float-end" style="height:2rem;"
+                            @click="OnClickCloseButton(index)"><i class="bi bi-x"></i></button>
+                        <button v-show="index!=0" class="btn btn-outline-primary btn-sm mb-2 float-end"
+                            style="height:2rem;margin-right:15px" @click="OnClickUpButton(index)"><i
+                                class="bi bi-arrow-up"></i></button>
                         <input type="text" class="form-control" v-model="item.Major"
                             :class="IsSumbit||item.Major.length!=0?'was-validated':''" pattern="^.{1,20}$" required>
                         <div class="invalid-feedback">
@@ -50,9 +57,9 @@
                 <div class="row my-1">
                     <div class="col">
                         <label class="form-label">经历描述</label>
-                        <AutoTextArea type="text" class="form-control "
+                        <textarea type="text" class="form-control "
                             :class="IsSumbit||item.Introduction.length!=0?'was-validated':''" pattern="^.{0,140}$"
-                            v-model:value="item.Introduction"></AutoTextArea>
+                            v-model="item.Introduction"></textarea>
                         <div class="invalid-feedback">
                             长度不能超过140个字符
                         </div>
@@ -95,6 +102,15 @@
                     ...this.EduInfos.slice(0, index),
                     ...this.EduInfos.slice(index + 1)
                 ];
+            },
+            async OnClickUpButton(index) {
+                this.EduInfos = [
+                    ...this.EduInfos.slice(0, index - 1),
+                    this.EduInfos[index],
+                    this.EduInfos[index - 1],
+                    ...this.EduInfos.slice(index + 1)
+                ];
+                this.RefreshSlider();
             },
             async OnClickSaveButton() {
                 await SaveEduInfo(this.EduInfos);
