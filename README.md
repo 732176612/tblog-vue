@@ -2,13 +2,13 @@
  * @Author: FalseEndLess 732176612@qq.com
  * @Date: 2021-10-16 15:31:30
  * @LastEditors: FalseEndLess 732176612@qq.com
- * @LastEditTime: 2022-06-24 20:26:06
+ * @LastEditTime: 2022-07-02 22:02:34
  * @FilePath: \tblog\README.md
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
-这是一个简历+文章的个人博客前端项目。
-与   https://gitee.com/FalseEndLess/tblog-api  后端项目配套使用。
-架构采用Vite+Vue3+Bootstarp
+这是一个简历+文章的个人博客前端项目（与 https://gitee.com/FalseEndLess/tblog-api 后端项目配套使用）。
+核心架构：Vue3+Vite+Bootstarp
+主要插件：ajax+toast+mescroll(下拉刷新)+summernote(富文本编辑器)
 
 运行指令：
 本地调试：npm run locally

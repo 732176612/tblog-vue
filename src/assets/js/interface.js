@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-06 13:36:46
- * @LastEditTime: 2022-05-28 16:33:02
+ * @LastEditTime: 2022-07-02 16:41:24
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\interface.js
@@ -183,6 +183,22 @@ export function UpLoadImgByFile(path, formFile) {
     headers: {
       'content-type': 'multipart/form-data'
     }
+  }, false)
+}
+
+/**
+ * @des: 上传图片
+ * @param {path(保存路径),base64} params
+ * @return {*}
+ */
+export function UpLoadImgByBase64(path, base64) {
+  return request({
+    url: "/api/Media/UpLoadImgByBase64",
+    method: "POST",
+    data: {
+      path,
+      base64
+    },
   }, false)
 }
 

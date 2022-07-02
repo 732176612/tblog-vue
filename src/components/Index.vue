@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-06-04 18:21:29
+ * @LastEditTime: 2022-07-02 16:59:31
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -29,8 +29,8 @@
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown"
                   aria-expanded="false">个人中心</a>
                 <ul class="dropdown-menu" aria-labelledby="dropdown07XL" v-if="true">
-                  <li><a class="dropdown-item" :href="'/view/acticleEditor/'+UserDto.BlogName">写文章</a></li>
-                  <li><a class="dropdown-item" :href="'/view/userInfo/'+UserDto.BlogName">个人信息</a></li>
+                  <li><a class="dropdown-item" :href="'/view/acticleEditor/'+Config.userSelf.BlogName">写文章</a></li>
+                  <li><a class="dropdown-item" :href="'/view/userInfo/'+Config.userSelf.BlogName">个人信息</a></li>
                   <li>
                     <hr class="dropdown-divider">
                   </li>

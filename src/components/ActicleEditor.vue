@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-06-04 15:22:01
+ * @LastEditTime: 2022-06-25 10:58:49
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -171,6 +171,9 @@
             }
         },
         methods: {
+            CheckSaveInfo() {
+                return confirm("您的文章未保存，确定离开吗？");
+            },
             InitRickTextEditor() {
                 let that = this;
                 let height = window.innerHeight * 0.5;
@@ -289,6 +292,7 @@
                     "releaseForm": isDraft ? '3' : this.ActicleReleaseForm
                 });
                 if (respone.Status == 200) {
+                    window.onbeforeunload=null;
                     this.$router.push("/view/acticleView/" + this.$route.params.blogname + "?id=" + respone
                         .Data);
                 }
@@ -313,6 +317,9 @@
             document.getElementById('addTagModal').addEventListener('hide.bs.modal', function (event) {
                 that.$refs.InputArtcleTag.value = '';
             })
+            window.onbeforeunload = function () {
+                return confirm("您的文章未保存，确定离开吗？");
+            }
         }
     }
 </script>
@@ -323,7 +330,7 @@
         bottom: 0;
         width: 100vw;
         height: 4rem;
-        right:0;
+        right: 0;
         background-color: rgb(255, 255, 255);
         z-index: 1051;
         border-top: darkgray solid 1px;

@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-06-12 14:57:32
+ * @LastEditTime: 2022-07-02 15:22:43
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -34,9 +34,10 @@
           <div class="card-body pt-0">
             <div class="d-flex flex-column my-3">
               <label class="form-label text-center">我的头像</label>
+              <ImageUpload field="img" @crop-success="cropSuccess" v-model="show" :width="300" :height="300"
+                img-format="png"></ImageUpload>
               <img ref="ViewHeadImg" class="userHeadImg rounded-circle" :src="UserHeadImg" alt="选择头像"
-                @click="this.$refs.UserHeadImg.click()" />
-              <input type="file" ref="UserHeadImg" hidden @change="OnHeadImageChage" />
+                @click="toggleShow" />
             </div>
             <form class="needs-validation">
               <div class="row">
@@ -173,6 +174,7 @@
     UpLoadImgByFile,
     UpLoadResumeByFile,
     GetUserInfo,
+    UpLoadImgByBase64
   } from '../assets/js/interface.js';
   import Projectinfo from './ProjectInfo.vue'
   import CompanyInfo from './CompanyInfo.vue'
@@ -201,10 +203,24 @@
         ResumeUrl: "",
         ResumeName: "",
         StyleColor: '#0077ff',
-        BackgroundUrl: ''
+        BackgroundUrl: '',
+        show: false,
+        params: {
+          token: '123456798',
+          name: 'avatar'
+        },
+        headers: {
+          smail: '*_~'
+        },
       }
     },
     methods: {
+      toggleShow() {
+        this.show = !this.show;
+      },
+      cropSuccess(imgDataUrl, field) {
+        this.UserHeadImg = imgDataUrl;
+      },
       async GetVerifyRegex() {
         let regexs = (await VerifyRegex({
           regexName: "BlogName"
@@ -214,18 +230,6 @@
           if (regexs[regex].Key == 'BlogName') {
             this.BlogNameRegex = regexs[regex].Value;
           }
-        }
-      },
-      OnHeadImageChage() {
-        if (this.$refs.UserHeadImg.files.length >= 1) {
-          let file = this.$refs.UserHeadImg.files[0];
-          if (file.size > 1 * 1024 * 1024) {
-            this.$toast.warning("图片大小不能超过1MB");
-            this.$refs.UserHeadImg.Value = '';
-            return;
-          }
-          let imgUrl = getObjectURL(file);
-          this.$refs.ViewHeadImg.src = imgUrl;
         }
       },
       OnBackgroundImageChage() {
@@ -256,8 +260,8 @@
           return;
         }
 
-        if (this.$refs.UserHeadImg.files.length != 0) {
-          let respone = await UpLoadImgByFile('headimg', this.$refs.UserHeadImg.files[0]);
+        if (IsBase64(this.UserHeadImg)) {
+          let respone = await UpLoadImgByBase64('headimg', this.UserHeadImg);
           if (respone == null || respone.Status == 500) {
             this.$toast.error("头像上传失败");
             return;
@@ -365,7 +369,10 @@
           AutoExtendTextArea();
         })
       })
-      observer.observe(box, config)
+      observer.observe(box, config);
+      window.onbeforeunload = function () {
+        return confirm("您的文章未保存，确定离开吗？");
+      }
     }
   }
 </script>

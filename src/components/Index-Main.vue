@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-05 22:22:35
- * @LastEditTime: 2022-06-08 19:35:16
+ * @LastEditTime: 2022-07-02 22:14:59
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\IndexMain.vue
@@ -166,6 +166,40 @@
                             data-aos-duration="500">
                             <div class="card-body">
                                 <p>{{item.Introduction}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" v-if="$route.params.blogname=='FalseEndLess'">
+            <div class="container cc-experience">
+                <div class="h4 text-center mb-4 title">关于TBlog</div>
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-12 aos-init" data-aos="fade-left" data-aos-offset="50"
+                            data-aos-duration="500">
+                            <div class="card-body">
+                                <p style="text-align:center">
+                                    <b>谢谢你光临本博客</b>
+                                    <br>
+                                    如果你对本博客系统源代码感兴趣可以点下方链接进行查阅哦。
+                                    <br>
+                                    前端源代码:
+                                    <a
+                                        href="https://gitee.com/FalseEndLess/tblog">https://gitee.com/FalseEndLess/tblog</a>
+                                    <br>
+                                    前端架构:Vue3.2.16+Vite2.6.4+Bootstrap5.1
+                                    <br>
+                                    后端源代码:
+                                    <a
+                                        href="https://gitee.com/FalseEndLess/tblog-api">https://gitee.com/FalseEndLess/tblog-api</a>
+                                    <br>
+                                    后端架构:.Net6.0+MongoDB5.0.3+Redis6.2.6
+                                    <br>
+                                    有任何疑问都可以加我QQ732176612进行交流。
+                                </p>
                             </div>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-10-16 15:31:30
- * @LastEditTime: 2022-06-12 15:10:15
+ * @LastEditTime: 2022-07-02 11:04:56
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\main.js
@@ -82,6 +82,8 @@ import loadingBtn from './components/UI/LoadingBtn.vue'
 import CheckInput from './components/UI/CheckInput.vue'
 import Mescroll from './components/UI/Mescroll.vue'
 import AutoTextArea from "./components/UI/TextareaAutosize.vue";
+import VueCoreImageUpload from 'vue-image-crop-upload'
+app.component('ImageUpload', VueCoreImageUpload);
 app.component('AutoTextArea', AutoTextArea);
 app.component('loadingbtn', loadingBtn);
 app.component('CheckInput', CheckInput);
@@ -96,7 +98,6 @@ import "nprogress/nprogress.css"
 router.beforeEach((to, from, next) => {
   NProgress.start()
   next()
-  console.log(to);
   if(to.path.indexOf('acticleView')==-1){
     if (to.params.blogname != undefined) {
       document.title = to.params.blogname + '-' + to.name
