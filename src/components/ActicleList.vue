@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-06-04 18:16:47
+ * @LastEditTime: 2022-08-26 20:45:18
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -23,18 +23,38 @@
         <div class="col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11">
             <div class="card">
                 <div class="card-header bg-white">
-                    <ul class="nav text-center">
-                        <li v-for="(item,index) in SortTags" :key="index" class="nav-item px-2 sortTag border-right"
-                            :style="(SelectSortTag==item.Key?'Color:var(--main_color)':'')"
-                            @click="OnClickSortTag(item.Key)">
-                            {{item.Value}}</li>
-                        <li v-show="isSelf($route)" class="nav-item px-2 sortTag border-right"
-                            :style="(ReleaseForm=='2'?'Color:var(--orange)':'')" @click="OnClickReleaseFormTag(2)">
-                            私密</li>
-                        <li v-show="isSelf($route)" class="nav-item px-2 sortTag"
-                            :style="(ReleaseForm=='3'?'Color:var(--orange)':'')" @click="OnClickReleaseFormTag(3)">
-                            草稿</li>
-                    </ul>
+                    <div class="container-fluid pl-0" style="padding-left:0;padding-right:0;">
+                        <div
+                            class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+                            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                                <li v-for="(item,index) in SortTags" :key="index"
+                                    class="nav-item px-2 sortTag border-right"
+                                    :style="(SelectSortTag==item.Key?'Color:var(--main_color)':'')"
+                                    @click="OnClickSortTag(item.Key)">
+                                    {{item.Value}}</li>
+                                <li v-show="isSelf($route)" class="nav-item px-2 sortTag border-right"
+                                    :style="(ReleaseForm=='2'?'Color:var(--orange)':'')"
+                                    @click="OnClickReleaseFormTag(2)">
+                                    私密</li>
+                                <li v-show="isSelf($route)" class="nav-item px-2 sortTag"
+                                    :style="(ReleaseForm=='3'?'Color:var(--orange)':'')"
+                                    @click="OnClickReleaseFormTag(3)">
+                                    草稿</li>
+                            </ul>
+
+                            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 mt-2" role="search"
+                                @submit.prevent="InitActicleList">
+                                <div class="input-group w-100">
+                                    <input type="text" v-model="SearchVal" class="form-control" placeholder="搜索文章">
+                                    <button type="button" class="btn btn-outline-secondary" @click="InitActicleList">
+                                        <i class="bi bi-search"></i>
+                                        <span class="visually-hidden">Button</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body bg-white pt-0 px-0">
                     <div class="list">
@@ -69,10 +89,15 @@
                             </div>
                         </Mescroll>
                     </div>
-                    <div v-if="ActicleList.length==0&&ReleaseForm!=2&&ReleaseForm!=3" class="ListEmptyTip">
+                    <div v-if="ActicleList.length==0&&EnterSearchVal==''&&ReleaseForm!=2&&ReleaseForm!=3"
+                        class="ListEmptyTip">
                         <a v-show="isSelf($route)"
                             :href="'/view/acticleEditor/'+$route.params.blogname">--快来写你的第一篇文章吧！--</a>
                         <span v-show="isSelf($route)==false">该博主太懒了，一篇博客都没写呢~</span>
+                    </div>
+
+                    <div v-if="ActicleList.length==0&&EnterSearchVal!=''" class="ListEmptyTip">
+                        <span>搜索结果为空</span>
                     </div>
                 </div>
             </div>
@@ -98,7 +123,9 @@
                 ActicleList: [],
                 TotalPageIndex: 0,
                 CurPageIndex: 0,
-                ReleaseForm: '1'
+                ReleaseForm: '1',
+                SearchVal: '',
+                EnterSearchVal: ''
             }
         },
         beforeRouteEnter(to, from, next) {
@@ -149,13 +176,15 @@
                 }
             },
             RequestGetActicleList: async function (pageSize, pageIndex) {
+                this.EnterSearchVal = this.SearchVal;
                 let respone = await GetActicleList({
                     pageSize: pageSize,
                     pageIndex: pageIndex,
                     blogName: this.$route.params.blogname,
                     releaseForm: this.ReleaseForm,
                     acticleSortTag: this.SelectSortTag,
-                    tags: this.SelectActicleTags.join(',')
+                    tags: this.SelectActicleTags.join(','),
+                    searchVal: this.SearchVal
                 });
                 this.TotalPageIndex = respone.Data.PageCount;
                 this.CurPageIndex = respone.Data.PageIndex;
@@ -181,21 +210,19 @@
                         tag
                     ];
                 }
-                this.ActicleList = [];
-                this.$refs.Mescroll.mescroll.setPageNum(1);
-                this.$refs.Mescroll.mescroll.triggerUpScroll();
+                this.InitActicleList();
             },
             OnClickSortTag: async function (tag) {
                 this.SelectSortTag = tag;
                 this.ReleaseForm = '1';
-                this.ActicleList = [];
-                await this.RequestGetTags();
-                this.$refs.Mescroll.mescroll.setPageNum(1);
-                this.$refs.Mescroll.mescroll.triggerUpScroll();
+                await this.InitActicleList();
             },
             OnClickReleaseFormTag: async function (tag) {
                 this.SelectSortTag = '2';
                 this.ReleaseForm = tag;
+                await this.InitActicleList();
+            },
+            InitActicleList: async function (e) {
                 this.ActicleList = [];
                 await this.RequestGetTags();
                 this.$refs.Mescroll.mescroll.setPageNum(1);
