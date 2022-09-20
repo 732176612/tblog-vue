@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-11-06 13:36:46
- * @LastEditTime: 2022-03-15 11:11:02
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-09-20 15:40:55
+ * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\assets\js\axios.js
  */
@@ -19,7 +19,7 @@ import toast from "./toast"
 // 创建axios实例
 const service = axios.create({
   baseURL: "/", // api 的 base_url
-  timeout: 15000 // 请求超时时间
+  timeout: 60000 // 请求超时时间
 })
 
 let showToast = false;

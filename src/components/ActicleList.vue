@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-08-26 20:45:18
+ * @LastEditTime: 2022-09-20 19:58:51
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
@@ -71,8 +71,8 @@
                                 </div>
                                 <div class="item-content pb-2 d-flex justify-content-between">
                                     <div class="content-main d-flex align-content-between flex-column">
-                                        <div class="content-title">{{acticle.Title}}</div>
-                                        <div class="content my-2">{{acticle.Content.replace(' ','')}}</div>
+                                        <div class="content-title" v-html="acticle.Title"></div>
+                                        <div class="content my-2" v-html="acticle.Content"></div>
                                         <div class="content-end">
                                             <ul class="nav text-center">
                                                 <li class="nav-item" style="padding-right:0.25rem">
