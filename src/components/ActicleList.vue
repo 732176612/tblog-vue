@@ -1,13 +1,13 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-09-20 19:58:51
+ * @LastEditTime: 2022-09-20 20:42:59
  * @LastEditors: FalseEndLess 732176612@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-    <div class="row justify-content-center" style="padding-bottom:4rem;padding-top:100px">
+    <div class="row justify-content-center" style="padding-bottom:4rem;padding-top:100px;width:100%;margin-left:0">
         <div class="col-11 col-xl-10 col-lg-10 col-md-8 col-sm-10 mb-2" v-show="ActicleList.length!=0">
             <div class="nav-scroller">
                 <nav class="nav d-flex">
@@ -20,7 +20,7 @@
             </div>
         </div>
 
-        <div class="col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11">
+        <div class="col-xl-10 col-lg-10 col-md-11 col-sm-11 col-11" style="padding:0">
             <div class="card">
                 <div class="card-header bg-white">
                     <div class="container-fluid pl-0" style="padding-left:0;padding-right:0;">
@@ -198,7 +198,10 @@
                 return acticleList;
             },
             OnClickActicleTag: function (tag) {
+                console.log(tag)
+                console.log(this.SelectActicleTags)
                 let index = this.SelectActicleTags.indexOf(tag);
+                console.log(index);
                 if (index != '-1') {
                     this.SelectActicleTags = [
                         ...this.SelectActicleTags.slice(0, index),
@@ -209,6 +212,7 @@
                         ...this.SelectActicleTags,
                         tag
                     ];
+                    console.log(this.SelectActicleTags)
                 }
                 this.InitActicleList();
             },
@@ -224,7 +228,6 @@
             },
             InitActicleList: async function (e) {
                 this.ActicleList = [];
-                await this.RequestGetTags();
                 this.$refs.Mescroll.mescroll.setPageNum(1);
                 this.$refs.Mescroll.mescroll.triggerUpScroll();
             },

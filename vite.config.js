@@ -28,6 +28,7 @@ export default (({
       domain = "http://tblog.falseendless.cn"
       break;
   }
+  console.log("CurrentEnvironment:", mode, domain);
   return defineConfig({
     plugins: [vue()],
     base: '/view/',
