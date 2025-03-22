@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "locally": "vite --mode locally",
-    "dev": "vite --mode development",
+    "development": "vite --mode development",
     "production": "vite --mode production",
     "build": "vite build",
     "serve": "vite preview"
@@ -12,6 +12,8 @@
     "@packy-tang/vue-tinymce": "^2.0.0-beta.1",
     "@tinymce/tinymce-vue": "^4.0.5",
     "@vue/server-renderer": "^3.2.20",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
     "admin-lte": "^3.1.0",
     "aos": "^2.3.4",
     "axios": "^0.24.0",
@@ -27,7 +29,6 @@
     "nprogress": "^0.2.0",
     "sass": "^1.49.7",
     "sass-loader": "^12.4.0",
-    "summernote": "^0.8.20",
     "vconsole": "^3.14.6",
     "vue": "^3.2.16",
     "vue-image-crop-upload": "^3.0.3",

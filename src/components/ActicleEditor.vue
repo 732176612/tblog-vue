@@ -1,23 +1,20 @@
-<!--
- * @Author: your name
- * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-06-25 10:58:49
- * @LastEditors: FalseEndLess 732176612@qq.com
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \tblog\src\components\UserInfo.vue
--->
 <template>
     <div class="justify-content-center px-xl-5 px-lg-4 px-md-3 px-sm-2 px-2 pb-3 w-100" style="padding-top:80px">
         <div class="w-100">
             <form class="mb-4 needs-validation">
                 <div class="card">
                     <div class="card-header">
-                        <CheckInput :PlaceholderVal="'文章标题'" :CheckAction="CheckRepeatTitle" :RequiredVal=true
-                            PatternVal="^.{1,30}$" :VerifyTipVal="'文章标题长度必须为1-30个字符'" ref="ActicleTitleInput">
+                        <CheckInput :PlaceholderVal="'文章标题'" :CheckAction="CheckRepeatTitle2" :RequiredVal=true
+                            PatternVal="^.{1,30}$" :VerifyTipVal="'文章标题长度必须为1-30个字符'" ref="ActicleTitleInputDom">
                         </CheckInput>
                     </div>
                     <div class="card-body">
-                        <div ref="summernote" class="summernote"></div>
+                        <div style="border: 1px solid #ccc">
+                            <Toolbar style="border-bottom: 1px solid #ccc" :editor="EditorRef"
+                                :defaultConfig="ToolbarConfig" :mode="Mode" />
+                            <Editor style="height: 500px; overflow-y: hidden;" v-model="Content"
+                                :defaultConfig="EditorConfig" :mode="Mode" @onCreated="HandleCreated" />
+                        </div>
                     </div>
                     <div class="card-footer text-muted">
                         <div class="rounded-1 px-2 pb-2 row" style="background-color:white">
@@ -25,7 +22,7 @@
                                 <label style="font-weight:400" class="w-25 text-end"> 封面图片:</label>
                                 <div class="d-flex justify-content-center w-75">
                                     <div class="UpLoadPoster d-flex align-items-center justify-content-center"
-                                        @click="this.$refs.PosterImg.click()">
+                                        @click="PosterImgDom.click()">
                                         <img ref="ViewPosterImg" class="ViewPosterImg img-thumbnail" :src="PosterImg"
                                             alt="选择头像" />
                                         <!-- <i class="bi bi-plus-circle-dotted" style="font-size:2rem"></i> -->
@@ -36,16 +33,16 @@
                                 <label style="font-weight:400" class="w-25 text-end">文章标签:</label>
                                 <div
                                     class="d-flex justify-content-center align-content-around flex-wrap w-75 pl-2 text-center">
-                                    <button v-show="ActicleTags.length<3" type="button"
+                                    <button v-show="ActicleTags.length < 3" type="button"
                                         class="btn btn-outline-danger btn-sm mx-2 mb-2" data-bs-toggle="modal"
-                                        data-bs-target="#addTagModal">
+                                        data-bs-target="#addTagModal" @click="RequestGetTags">
                                         <i class="bi bi-plus"></i>
                                         添加标签
                                     </button>
                                     <button type="button" class="btn btn-outline-danger btn-sm mx-2 mb-2"
-                                        v-for="(item,index) in ActicleTags" :key="index"
+                                        v-for="(item, index) in ActicleTags" :key="index"
                                         @click="OnClickActicleTags(index)">
-                                        {{item}}
+                                        {{ item }}
                                         <i class="bi bi-x"></i>
                                     </button>
                                 </div>
@@ -74,14 +71,14 @@
                                 <div class="d-flex justify-content-center w-75 pl-2">
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="AccessRadio" id="Public"
-                                            value="1" v-model="ActicleReleaseForm">
+                                            value="1" v-model="ActicleReleaseFormRadio">
                                         <label class="form-check-label" for="Public">
                                             公共
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="AccessRadio" id="Private"
-                                            value="2" v-model="ActicleReleaseForm">
+                                            value="2" v-model="ActicleReleaseFormRadio">
                                         <label class="form-check-label" for="Private">
                                             私密
                                         </label>
@@ -91,7 +88,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="file" ref="PosterImg" hidden @change="OnPosterImgChange" />
+                <input type="file" ref="PosterImgDom" hidden @change="OnPosterImgChange" />
             </form>
         </div>
         <div class="BottomNav">
@@ -113,8 +110,16 @@
                             aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input ref="InputArtcleTag" type="text" class="form-control text-center"
+                        <input ref="InputArtcleTagDom" type="text" class="form-control text-center"
                             placeholder="标签名(最长不超过10个字符)" pattern="^.{1,10}$" required>
+                        <div class="nav-scroller mt-3">
+                            <nav class="nav d-flex">
+                                <div v-for="(item, index) in OldActicleTags" :key="index"
+                                    class="tag rounded-pill mx-2 py-1 px-3 mb-2 text-center"
+                                    :style="'background-color:var(--blue)'" @click="OnClickAddActicleTag(item)">
+                                    {{ item }}</div>
+                            </nav>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-main" @click="OnClickAddActicleTag">添加</button>
@@ -144,212 +149,251 @@
 </template>
 
 <script>
-    import {
-        CheckRepeatTitle,
-        SaveActicle,
-        UpLoadImgByFile,
-        GetActicle
-    } from '../assets/js/interface.js';
-    import $ from 'jquery/dist/jquery'
-    import 'summernote/dist/summernote-lite.js'
-    import 'summernote/dist/summernote-lite.css'
-    import {
-        Modal
-    } from 'bootstrap/dist/js/bootstrap.bundle'
-    import PosterImgUrl from "../assets/svg/plus-circle-dotted.svg"
-    export default {
-        name: "ArtcleEditor",
-        data() {
-            return {
-                Title: "",
-                Content: "",
-                PosterImg: PosterImgUrl,
-                ActicleReleaseForm: "1",
-                ActicleType: "1",
-                ActicleTags: [],
-                CheckRepeatTitle: CheckRepeatTitle,
-            }
-        },
-        methods: {
-            CheckSaveInfo() {
-                return confirm("您的文章未保存，确定离开吗？");
-            },
-            InitRickTextEditor() {
-                let that = this;
-                let height = window.innerHeight * 0.5;
-                var viewButton = function (context) {
-                    var ui = $.summernote.ui;
-                    var button = ui.button({
-                        contents: '<i class="bi bi-eye-fill"/>',
-                        click: function () {
-                            Modal.getOrCreateInstance(document.getElementById('ViewModal')).show();
-                            $('#ViewContent').html($('.summernote').summernote('code'));
-                        }
-                    });
-
-                    return button.render(); // return button as jquery object
-                }
-
-                $('.summernote').summernote({
-                    height: height,
-                    toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'underline', 'clear']],
-                        ['fontname', ['fontname']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph']],
-                        ['insert', ['link', 'picture', 'video']],
-                        ['view', ['fullscreen', 'codeview', 'help']],
-                        ['mybutton', ['view']]
-                    ],
-                    buttons: {
-                        view: viewButton
-                    },
-                    callbacks: {
-                        onInit: async function () {
-                            await that.InitActicle();
-                        },
-                        onImageUpload: async function (files) {
-                            let respone = await UpLoadImgByFile('ActicleImg', files[0]);
-                            if (respone.Status == 200) {
-                                $('.summernote').summernote('insertImage', respone.Data, 'img');
-                                console.log(that.PosterImg);
-                                if (that.PosterImg.indexOf('/svg/plus-circle-dotted.svg') != -1 && that
-                                    .$refs.PosterImg.files.length == 0) {
-                                    that.PosterImg = respone.Data;
-                                }
+import { useRoute, useRouter } from 'vue-router'
+import {
+    CheckRepeatTitle,
+    SaveActicle,
+    UpLoadImgByFile,
+    GetActicle,
+    GetTags
+} from '../assets/js/interface.js'
+import {
+    Modal
+} from 'bootstrap/dist/js/bootstrap.bundle'
+import PosterImgUrl from "../assets/svg/plus-circle-dotted.svg"
+import '@wangeditor/editor/dist/css/style.css'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import { onBeforeUnmount, ref, shallowRef, onMounted, getCurrentInstance } from 'vue'
+export default {
+    components: { Editor, Toolbar },
+    name: "ArtcleEditor",
+    setup() {
+        const { proxy } = getCurrentInstance();
+        const route = useRoute();
+        const router = useRouter();
+        const Title = ref('');
+        const Content = ref('');
+        const PosterImg = ref(PosterImgUrl);
+        const ActicleTitleInputDom = ref();
+        const InputArtcleTagDom = ref();
+        const PosterImgDom = ref();
+        const ActicleReleaseFormRadio = ref('1');
+        const ActicleType = ref('1');
+        const ActicleTags = ref([]);
+        const OldActicleTags = ref([]);
+        const EditorRef = shallowRef();
+        const ToolbarConfig = {};
+        const EditorConfig = {
+            placeholder: '请输入内容...',
+            MENU_CONF: {
+                'uploadImage': {
+                    server: '/api/Media/UpLoadImgByFile?path=ActicleImg',
+                    async customUpload(file, insertFn) {
+                        let respone = await UpLoadImgByFile('ActicleImg', file);
+                        if (respone.Status == 200) {
+                            if (PosterImg.value.indexOf('/svg/plus-circle-dotted.svg') != -1 && PosterImgDom.value.files.length == 0) {
+                                PosterImg.value = respone.Data;
                             }
                         }
-                    }
-                });
-            },
-            OnPosterImgChange() {
-                if (this.$refs.PosterImg.files.length >= 1) {
-                    let file = this.$refs.PosterImg.files[0];
-                    if (file.size > 1 * 1024 * 1024) {
-                        this.$toast.warning("图片大小不能超过2MB");
-                        this.$refs.PosterImg.Value = '';
-                        return;
-                    }
-                    let imgUrl = getObjectURL(file);
-                    this.PosterImg = imgUrl;
-                }
-            },
-            OnClickActicleTags(index) {
-                this.ActicleTags = [
-                    ...this.ActicleTags.slice(0, index),
-                    ...this.ActicleTags.slice(index + 1)
-                ];
-            },
-            OnClickAddActicleTag() {
-                let tag = this.$refs.InputArtcleTag.value;
-
-                if (this.ActicleTags.length >= 3) {
-                    this.$toast.error("标签最多添加3个!");
-                    return;
-                }
-
-                if (tag == '' || tag == undefined) {
-                    this.$toast.warning('标签不能为空!');
-                    return;
-                }
-
-                this.ActicleTags = [...this.ActicleTags, tag];
-                Modal.getOrCreateInstance(document.getElementById('addTagModal')).hide();
-            },
-            async OnClickSaveActicle() {
-                if (this.ActicleReleaseForm == '3') {
-                    this.ActicleReleaseForm = '1';
-                }
-                await this.RequestSaveActicle(false);
-            },
-            async OnClickSaveDraft() {
-                await this.RequestSaveActicle(true);
-            },
-            async RequestSaveActicle(isDraft) { //isDraft:是否为草稿
-                if (!this.$refs.ActicleTitleInput.CheckValidity) {
-                    this.$toast.error("文章标题有误");
-                    return;
-                }
-
-                if (this.$refs.PosterImg.files.length != 0) {
-                    let respone = await UpLoadImgByFile('acticleposter', this.$refs.PosterImg.files[0]);
-                    if (respone == null || respone.Status == 500) {
-                        this.$toast.error("文章封面上传失败");
-                        return;
-                    } else {
-                        this.PosterImg = respone.Data;
-                    }
-                }
-                let posterImg = this.PosterImg.indexOf('plus-circle-dotted') == -1 ? this.PosterImg : '';
-                let respone = await SaveActicle({
-                    "id": this.$route.query.id,
-                    "title": this.$refs.ActicleTitleInput.InputValue,
-                    "content": $('.summernote').summernote('code'),
-                    "posterUrl": posterImg,
-                    "tags": this.ActicleTags,
-                    "acticleType": this.ActicleType,
-                    "releaseForm": isDraft ? '3' : this.ActicleReleaseForm
-                });
-                if (respone.Status == 200) {
-                    window.onbeforeunload=null;
-                    this.$router.push("/view/acticleView/" + this.$route.params.blogname + "?id=" + respone
-                        .Data);
-                }
-            },
-            async InitActicle() {
-                if (this.$route.query.id != undefined) {
-                    let respone = await GetActicle(this.$route.query.id);
-                    if (respone.Status == 200) {
-                        this.$refs.ActicleTitleInput.InputValue = respone.Data.Title;
-                        this.ActicleTags = [...respone.Data.Tags];
-                        this.PosterImg = respone.Data.PosterUrl;
-                        $('.summernote').summernote('code', respone.Data.Content);
-                        this.ActicleReleaseForm = respone.Data.ReleaseForm;
-                        this.ActicleType = respone.Data.ActicleType;
+                        insertFn(respone.Data, '', '')
                     }
                 }
             }
-        },
-        async mounted() {
-            let that = this;
-            this.InitRickTextEditor();
+        };
+        const Mode = 'default';
+
+        onMounted(() => {
             document.getElementById('addTagModal').addEventListener('hide.bs.modal', function (event) {
-                that.$refs.InputArtcleTag.value = '';
+                InputArtcleTagDom.value = '';
             })
             window.onbeforeunload = function () {
                 return confirm("您的文章未保存，确定离开吗？");
             }
+        })
+
+        onBeforeUnmount(() => {
+            const editor = EditorRef.value
+            if (editor == null) return
+            editor.destroy()
+        })
+
+        const HandleCreated = async (editor) => {
+            EditorRef.value = editor;
+            await InitActicle();
+        }
+
+        const OnPosterImgChange = () => {
+            if (PosterImgDom.value.files.length >= 1) {
+                let file = PosterImgDom.value.files[0];
+                if (file.size > 1 * 1024 * 1024) {
+                    proxy.$toast.warning("图片大小不能超过2MB");
+                    PosterImgDom.value = '';
+                    return;
+                }
+                let imgUrl = getObjectURL(file);
+                PosterImg.value = imgUrl;
+            }
+        }
+
+        function OnClickActicleTags(index) {
+            ActicleTags.value = [
+                ...ActicleTags.value.slice(0, index),
+                ...ActicleTags.value.slice(index + 1)
+            ];
+        }
+
+        function OnClickAddActicleTag(title) {
+            let tag = title ? title : InputArtcleTagDom.value;
+
+            if (ActicleTags.value.length >= 3) {
+                proxy.$toast.error("标签最多添加3个!");
+                return;
+            }
+
+            if (tag == '' || tag == undefined) {
+                proxy.$toast.warning('标签不能为空!');
+                return;
+            }
+
+            ActicleTags.value = [...ActicleTags.value, tag];
+            Modal.getOrCreateInstance(document.getElementById('addTagModal')).hide();
+        }
+
+        async function OnClickSaveActicle() {
+            if (ActicleReleaseFormRadio.value == '3') {
+                ActicleReleaseFormRadio.value = '1';
+            }
+            await RequestSaveActicle(false);
+        }
+
+        async function OnClickSaveDraft() {
+            await RequestSaveActicle(true);
+        }
+
+        async function RequestSaveActicle(isDraft) { //isDraft:是否为草稿
+            if (!ActicleTitleInputDom.value.CheckValidity) {
+                proxy.$toast.error("文章标题有误");
+                return;
+            }
+
+            if (PosterImgDom.value.files.length != 0) {
+                let respone = await UpLoadImgByFile('acticleposter', PosterImgDom.value.files[0]);
+                if (respone == null || respone.Status == 500) {
+                    proxy.$toast.error("文章封面上传失败");
+                    return;
+                } else {
+                    PosterImg.value = respone.Data;
+                }
+            }
+            let posterImg = PosterImg.value.indexOf('plus-circle-dotted') == -1 ? PosterImg.value : '';
+            let respone = await SaveActicle({
+                "id": route.query.id,
+                "title": ActicleTitleInputDom.value.InputValue,
+                "content": Content.value,
+                "posterUrl": posterImg,
+                "tags": ActicleTags.value,
+                "acticleType": ActicleType.value,
+                "releaseForm": isDraft ? '3' : ActicleReleaseFormRadio.value
+            });
+            if (respone.Status == 200) {
+                window.onbeforeunload = null;
+                router.push("/view/acticleView/" + route.params.blogname + "?id=" + respone.Data);
+            }
+        }
+
+        let oldActicleTitle = '';
+        function CheckRepeatTitle2(title) {
+            if (route.query.id != undefined && oldActicleTitle == title) return;
+            return CheckRepeatTitle(title);
+        }
+
+        async function RequestGetTags() {
+            let respone = await GetTags(route.params.blogname, 1);
+            OldActicleTags.value = respone.Data;
+        }
+
+        async function InitActicle() {
+            if (route.query.id != undefined) {
+                let respone = await GetActicle(route.query.id);
+                if (respone.Status == 200) {
+                    oldActicleTitle = respone.Data.Title;
+                    ActicleTitleInputDom.value.InputValue = respone.Data.Title;
+                    ActicleTags.value = [...respone.Data.Tags];
+                    if (respone.Data.PosterUrl)
+                        PosterImg.value = respone.Data.PosterUrl;
+                    ActicleReleaseFormRadio.value = respone.Data.ReleaseForm;
+                    ActicleType.value = respone.Data.ActicleType;
+                    Content.value = respone.Data.Content;
+                }
+            }
+        }
+
+        return {
+            Title,
+            Content,
+            PosterImg,
+            ActicleReleaseFormRadio,
+            ActicleType,
+            ActicleTags,
+            EditorRef,
+            ToolbarConfig,
+            EditorConfig,
+            Mode,
+            HandleCreated,
+            OnPosterImgChange,
+            OnClickActicleTags,
+            OnClickAddActicleTag,
+            OnClickSaveActicle,
+            OnClickSaveDraft,
+            RequestSaveActicle,
+            InitActicle,
+            CheckRepeatTitle2,
+            PosterImgDom,
+            ActicleTitleInputDom,
+            RequestGetTags,
+            OldActicleTags
         }
     }
+}
 </script>
 
 <style scoped>
-    .BottomNav {
-        position: fixed;
-        bottom: 0;
-        width: 100vw;
-        height: 4rem;
-        right: 0;
-        background-color: rgb(255, 255, 255);
-        z-index: 1051;
-        border-top: darkgray solid 1px;
-    }
+.BottomNav {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    height: 4rem;
+    right: 0;
+    background-color: rgb(255, 255, 255);
+    z-index: 1051;
+    border-top: darkgray solid 1px;
+}
 
-    .UpLoadPoster {
-        border: 1px dashed #bfbfbf;
-        border-radius: 4px;
-        width: 90px;
-        height: 90px;
-    }
+.UpLoadPoster {
+    border: 1px dashed #bfbfbf;
+    border-radius: 4px;
+    width: 90px;
+    height: 90px;
+}
 
-    .UpLoadPoster:hover {
-        cursor: pointer;
-        background-color: rgb(221, 221, 221);
-    }
+.UpLoadPoster:hover {
+    cursor: pointer;
+    background-color: rgb(221, 221, 221);
+}
 
-    .ViewPosterImg {
-        max-height: 90px;
-        width: auto;
-    }
+.ViewPosterImg {
+    max-height: 90px;
+    width: auto;
+}
+
+.tag {
+    background-color: #949494;
+    color: white;
+    font-size: .85rem;
+}
+
+.tag:hover {
+    background-color: var(--main_color);
+    cursor: pointer;
+}
 </style>
