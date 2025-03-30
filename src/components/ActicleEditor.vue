@@ -191,7 +191,8 @@ export default {
                     async customUpload(file, insertFn) {
                         let respone = await UpLoadImgByFile('ActicleImg', file);
                         if (respone.Status == 200) {
-                            if (PosterImg.value.indexOf('/svg/plus-circle-dotted.svg') != -1 && PosterImgDom.value.files.length == 0) {
+                            if (PosterImg.value.indexOf('/svg/plus-circle-dotted.svg') != -1
+                            && PosterImgDom.value.files.length == 0) {
                                 PosterImg.value = respone.Data;
                             }
                         }
@@ -225,9 +226,11 @@ export default {
         const OnPosterImgChange = () => {
             if (PosterImgDom.value.files.length >= 1) {
                 let file = PosterImgDom.value.files[0];
+                console.log(file);
                 if (file.size > 1 * 1024 * 1024) {
-                    proxy.$toast.warning("图片大小不能超过2MB");
-                    PosterImgDom.value = '';
+                    proxy.$toast.warning("图片大小不能超过1MB");
+                    PosterImgDom.value.value = '';
+                    console.log(PosterImgDom.value.files)
                     return;
                 }
                 let imgUrl = getObjectURL(file);
@@ -275,7 +278,8 @@ export default {
                 proxy.$toast.error("文章标题有误");
                 return;
             }
-
+            
+            console.log(PosterImgDom.value.files);
             if (PosterImgDom.value.files.length != 0) {
                 let respone = await UpLoadImgByFile('acticleposter', PosterImgDom.value.files[0]);
                 if (respone == null || respone.Status == 500) {
