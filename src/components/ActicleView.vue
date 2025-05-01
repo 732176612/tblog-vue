@@ -7,17 +7,17 @@
  * @FilePath: \tblog\src\components\UserInfo.vue
 -->
 <template>
-    <div class="row justify-content-center" style="padding-top:80px">
-        <div class="col-xl-10 col-lg-10 col-md-11 col-sm-12">
+    <div class="row justify-content-center" style="padding-top:80px;margin: 0;">
+        <div class="col-xl-10 col-lg-10 col-md-11 col-sm-12" style="padding: 5px;">
             <div class="main rounded bg-white mx-xl-5 mx-3 px-xl-5 px-md-3 px-2 py-4">
-                <div class="title">{{Title}}</div>
+                <div class="title">{{ Title }}</div>
                 <div class="header d-flex justify-content-between flex-wrap my-4">
                     <div class="header-right d-flex">
                         <img class="header-img rounded-circle mr-2" :src="UserHeadImg" />
                         <div class="header-content align-self-center">
-                            <div class="header-name">{{UserName}}</div>
-                            <div class="header-info">{{ActicleCDate}}</div>
-                            <div class="header-info">阅读 {{LookNums}} · 点赞 {{LikeNums}}</div>
+                            <div class="header-name">{{ UserName }}</div>
+                            <div class="header-info">{{ ActicleCDate }}</div>
+                            <div class="header-info">阅读 {{ LookNums }} · 点赞 {{ LikeNums }}</div>
                         </div>
                     </div>
                     <!-- <button type="button" class="btn btn-outline-primary btn-sm align-self-center" style="height:40px">
@@ -31,10 +31,10 @@
                 </div>
                 <div class="footer d-flex justify-content-center">
                     <button type="button" class="btn btn-outline-primary position-relative mx-3"
-                        @click="OnClickLikeButton" :disabled="isSelf($route)?'disabled':false">
+                        @click="OnClickLikeButton" :disabled="isSelf($route) ? 'disabled' : false">
                         <i class="bi bi-hand-thumbs-up"></i>
                         <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
-                            {{LikeNums}}+
+                            {{ LikeNums }}+
                             <span class="visually-hidden">unread messages</span>
                         </span>
                     </button>
@@ -74,123 +74,145 @@
 </template>
 
 <script>
-    import {
-        GetActicle,
-        GetUserInfo,
-        LikeArticle,
-        LookArticle,
-        DeleteArticle
-    } from '../assets/js/interface.js';
-    import {
-        Modal
-    } from 'bootstrap/dist/js/bootstrap.bundle';
-    export default {
-        name: "ArtcleEditor",
-        data() {
-            return {
-                Title: "",
-                Content: "",
-                PosterImg: "",
-                ActicleReleaseForm: "1",
-                ActicleType: "1",
-                ActicleTags: [],
-                ActicleCDate: "",
-                UserHeadImg: "",
-                UserName: "",
-                LikeNums: 0,
-                LookNums: 0,
-                CBlogName: ""
-            }
-        },
-        methods: {
-            async InitActicle() {
-                if (this.$route.query.id != undefined) {
-                    let respone = await GetActicle(this.$route.query.id);
-                    if (respone.Status == 200) {
-                        this.Title = respone.Data.Title;
-                        this.ActicleTags = [...respone.Data.Tags];
-                        this.PosterImg = respone.Data.PosterUrl;
-                        this.ActicleReleaseForm = respone.Data.ReleaseForm;
-                        this.ActicleType = respone.Data.ActicleType;
-                        this.Content = respone.Data.Content;
-                        this.ActicleCDate = respone.Data.CDate;
-                        this.LikeNums = respone.Data.LikeNum;
-                        this.LookNums = respone.Data.LookNum;
-                        this.CBlogName = respone.Data.CBlogName;
-                        document.title = this.Title;
-                    }
-                }
-            },
-            async InitUserInfo() {
-                let respone = await GetUserInfo(this.$route.params.blogname);
-                if (respone != null && respone.Status == 200) {
-                    this.UserName = respone.Data.UserName;
-                    this.UserHeadImg = respone.Data.HeadImgUrl;
-                }
-            },
-            async OnClickLikeButton() {
-                let respone = await LikeArticle(this.$route.query.id);
-                if (respone.Status == 200) {
-                    this.LikeNums++;
-                }
-            },
-            OnClickEditorButton() {
-                this.$router.push("/view/acticleEditor/" + this.$route.params.blogname + "?id=" + this.$route
-                    .query.id);
-            },
-            async OnClickDeleteButton() {
-                Modal.getOrCreateInstance(document.getElementById('deleteModal')).hide();
-                let respone = await DeleteArticle(this.$route.query.id);
-                if (respone.Status == 200) {
-                    this.$toast.success("删除成功!");
-                    this.$router.push("/view/acticleList/" + this.$route.params.blogname);
-                }
-            }
-        },
-        async mounted() {
-            if (this.$route.query.id == undefined) {
-                this.$router.push("/view/index");
-                return;
-            }
-            this.InitUserInfo();
-            this.InitActicle();
-            await LookArticle(this.$route.query.id);
+import {
+    GetActicle,
+    GetUserInfo,
+    LikeArticle,
+    LookArticle,
+    DeleteArticle
+} from '../assets/js/interface.js';
+import {
+    Modal
+} from 'bootstrap/dist/js/bootstrap.bundle';
+export default {
+    name: "ArtcleEditor",
+    data() {
+        return {
+            Title: "",
+            Content: "",
+            PosterImg: "",
+            ActicleReleaseForm: "1",
+            ActicleType: "1",
+            ActicleTags: [],
+            ActicleCDate: "",
+            UserHeadImg: "",
+            UserName: "",
+            LikeNums: 0,
+            LookNums: 0,
+            CBlogName: ""
         }
+    },
+    methods: {
+        async InitActicle() {
+            if (this.$route.query.id != undefined) {
+                let respone = await GetActicle(this.$route.query.id);
+                if (respone.Status == 200) {
+                    this.Title = respone.Data.Title;
+                    this.ActicleTags = [...respone.Data.Tags];
+                    this.PosterImg = respone.Data.PosterUrl;
+                    this.ActicleReleaseForm = respone.Data.ReleaseForm;
+                    this.ActicleType = respone.Data.ActicleType;
+                    this.Content = respone.Data.Content;
+                    this.ActicleCDate = respone.Data.CDate;
+                    this.LikeNums = respone.Data.LikeNum;
+                    this.LookNums = respone.Data.LookNum;
+                    this.CBlogName = respone.Data.CBlogName;
+                    document.title = this.Title;
+                    this.$nextTick(() => {
+                        const images = document.querySelectorAll('.content img');
+                        images.forEach(img => {
+                            img.style.width = '100%';
+                            img.style.height = 'auto';
+                        });
+                    });
+                }
+            }
+        },
+        async InitUserInfo() {
+            let respone = await GetUserInfo(this.$route.params.blogname);
+            if (respone != null && respone.Status == 200) {
+                this.UserName = respone.Data.UserName;
+                this.UserHeadImg = respone.Data.HeadImgUrl;
+            }
+        },
+        async OnClickLikeButton() {
+            let respone = await LikeArticle(this.$route.query.id);
+            if (respone.Status == 200) {
+                this.LikeNums++;
+            }
+        },
+        OnClickEditorButton() {
+            this.$router.push("/view/acticleEditor/" + this.$route.params.blogname + "?id=" + this.$route
+                .query.id);
+        },
+        async OnClickDeleteButton() {
+            Modal.getOrCreateInstance(document.getElementById('deleteModal')).hide();
+            let respone = await DeleteArticle(this.$route.query.id);
+            if (respone.Status == 200) {
+                this.$toast.success("删除成功!");
+                this.$router.push("/view/acticleList/" + this.$route.params.blogname);
+            }
+        }
+    },
+    async mounted() {
+        if (this.$route.query.id == undefined) {
+            this.$router.push("/view/index");
+            return;
+        }
+        this.InitUserInfo();
+        this.InitActicle();
+        await LookArticle(this.$route.query.id);
     }
+}
 </script>
 
 <style scoped>
-    .main {
-        overflow-x: hidden;
-    }
+.main {
+    overflow-x: hidden;
+}
 
-    .title {
-        color: #1d1f25;
-        font-size: 2.1rem;
-        font-weight: 700;
-    }
+.title {
+    color: #1d1f25;
+    font-size: 2.1rem;
+    font-weight: 700;
+}
 
-    .header {
-        padding-top: 20px;
-        padding-bottom: 20px;
-        border-bottom: 1px solid #949494;
-        border-top: 1px solid #949494;
-    }
+.header {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #949494;
+    border-top: 1px solid #949494;
+}
 
-    .header-img {
-        height: 60px;
-        width: 60px;
-        margin-right: 15px;
-    }
+.header-img {
+    height: 60px;
+    width: 60px;
+    margin-right: 15px;
+}
 
-    .header-name {
-        color: #515767;
-        font-size: 1.1rem;
-    }
+.header-name {
+    color: #515767;
+    font-size: 1.1rem;
+}
 
-    .header-info {
-        color: #777f97;
-        font-size: 0.9rem;
+.header-info {
+    color: #777f97;
+    font-size: 0.9rem;
+}
 
+.content {
+    width: 100%;
+
+    img {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
     }
+}
+
+.content img {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100% !important;
+}
 </style>
