@@ -1,11 +1,3 @@
-<!--
- * @Author: your name
- * @Date: 2022-01-23 15:57:56
- * @LastEditTime: 2022-08-15 23:31:29
- * @LastEditors: FalseEndLess 732176612@qq.com
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \tblog\src\components\UserInfo.vue
--->
 <template>
   <div class="d-flex h-100 mx-auto flex-column">
     <header v-if="UserDto.BlogName!=''">

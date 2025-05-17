@@ -9,10 +9,10 @@ export default (({
 }) => {
   let domain = '';
   switch (mode) {
-    case 'locally':
-      domain = "http://localhost:8081";
+    case 'dev':
+      domain = "http://localhost:8888";
       break;
-    case 'production':
+    default:
       domain = "http://tblog.falseendless.cn"
       break;
   }

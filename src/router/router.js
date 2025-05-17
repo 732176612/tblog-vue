@@ -18,7 +18,7 @@ const routes = [{
   path: '/view/index/:blogname',
   component: () => import('../components/Index.vue'),
   children: [{
-    name: "首页",
+    name: "首页2",
     path: '',
     component: () => import('../components/Index-Main.vue')
   }]

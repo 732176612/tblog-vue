@@ -2,9 +2,8 @@
   "name": "tblog",
   "version": "0.0.0",
   "scripts": {
-    "locally": "vite --mode locally",
-    "development": "vite --mode development",
-    "production": "vite --mode production",
+    "dev": "vite --mode dev",
+    "pro": "vite --mode pro",
     "build": "vite build",
     "serve": "vite preview"
   },
@@ -22,7 +21,6 @@
     "dayjs": "^1.10.7",
     "default-passive-events": "^2.0.0",
     "express": "^4.17.1",
-    "jquery": "^3.6.0",
     "js-cookie": "^3.0.1",
     "linq": "^4.0.0",
     "mescroll.js": "^1.4.2",

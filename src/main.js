@@ -64,7 +64,7 @@ app.config.globalProperties.Config = {
   }
 };
 app.config.globalProperties.isSelf = function (route) { //当前博客是否属于登陆用户的
-  return app.config.globalProperties.Config.userSelf.BlogName == route.params.blogname;
+  return app.config.globalProperties.Config.userSelf.BlogName?.toLowerCase() == route.params.blogname?.toLowerCase();
 };
 
 import loadingBtn from './components/UI/LoadingBtn.vue'

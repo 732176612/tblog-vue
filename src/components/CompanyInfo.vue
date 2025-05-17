@@ -73,14 +73,16 @@
                 </div>
 
                 <div class="row">
-                    <div class="col my-1">
+                    <div class="col my-1 dateTimePickerLayout">
                         <label class="form-label">开始时间</label>
-                        <input type="date" class="form-control " v-model="item.StartDate">
+                        <input type="text" class="form-control" v-model="item.StartDate">
+                        <input type="date" class="form-control dateTimePicker" v-model="item.StartDate">
                     </div>
 
-                    <div class="col my-1">
+                    <div class="col my-1 dateTimePickerLayout">
                         <label class="form-label">结束时间</label>
-                        <input type="date" class="form-control " v-model="item.EndDate">
+                        <input type="text" class="form-control" v-model="item.EndDate">
+                        <input type="date" class="form-control dateTimePicker" v-model="item.EndDate">
                     </div>
                 </div>
 
@@ -169,5 +171,14 @@
 </script>
 
 <style>
+.dateTimePickerLayout {
+    position: relative;
+}
 
+.dateTimePicker {
+    position: absolute;
+    top: 32px;
+    width: 45px;
+    right: 12px;
+}
 </style>

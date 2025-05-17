@@ -145,6 +145,24 @@
                 </div>
             </div>
         </div>
+        <!-- 加载草稿确认弹窗 -->
+        <div class="modal fade" id="loadDraftModal" tabindex="-1" aria-labelledby="loadDraftModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="loadDraftModalLabel">提示</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="关闭"></button>
+              </div>
+              <div class="modal-body">
+                检测到您上次有未保存的文章，是否加载？
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @click="onLoadDraftCancel">取消</button>
+                <button type="button" class="btn btn-primary" @click="onLoadDraftConfirm">加载</button>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
 </template>
 
@@ -164,6 +182,8 @@ import PosterImgUrl from "../assets/svg/plus-circle-dotted.svg"
 import '@wangeditor/editor/dist/css/style.css'
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { onBeforeUnmount, ref, shallowRef, onMounted, getCurrentInstance } from 'vue'
+import { watch } from 'vue';
+
 export default {
     components: { Editor, Toolbar },
     name: "ArtcleEditor",
@@ -191,8 +211,7 @@ export default {
                     async customUpload(file, insertFn) {
                         let respone = await UpLoadImgByFile('ActicleImg', file);
                         if (respone.Status == 200) {
-                            if (PosterImg.value.indexOf('/svg/plus-circle-dotted.svg') != -1
-                            && PosterImgDom.value.files.length == 0) {
+                            if (PosterImg.value.indexOf('/svg/plus-circle-dotted.svg') != -1 && PosterImgDom.value.files.length == 0) {
                                 PosterImg.value = respone.Data;
                             }
                         }
@@ -202,6 +221,43 @@ export default {
             }
         };
         const Mode = 'default';
+        const getCacheKey = () => {
+            const id = route.query.id;
+            return `article_draft_${id ? id : 'draft'}`;
+        };
+
+        watch([Content, ActicleTags, ActicleType, ActicleReleaseFormRadio], () => {
+            const cacheKey = getCacheKey();
+            const cacheData = {
+                title: ActicleTitleInputDom.value?.InputValue || '',
+                content: Content.value,
+                tags: ActicleTags.value,
+                acticleType: ActicleType.value,
+                releaseForm: ActicleReleaseFormRadio.value,
+                posterImg: PosterImg.value
+            };
+            localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+        });
+
+        // --------- 新增：加载草稿弹窗逻辑 ---------
+        let loadDraftData = null;
+        let loadDraftModalInstance = null;
+        function onLoadDraftConfirm() {
+            if (loadDraftData) {
+                const data = loadDraftData;
+                if (data.title) ActicleTitleInputDom.value.InputValue = data.title;
+                if (data.content) Content.value = data.content;
+                if (data.tags) ActicleTags.value = data.tags;
+                if (data.acticleType) ActicleType.value = data.acticleType;
+                if (data.releaseForm) ActicleReleaseFormRadio.value = data.releaseForm;
+                if (data.posterImg) PosterImg.value = data.posterImg;
+            }
+            loadDraftModalInstance.hide();
+        }
+        function onLoadDraftCancel() {
+            loadDraftModalInstance.hide();
+        }
+        // --------- 新增结束 ---------
 
         onMounted(() => {
             document.getElementById('addTagModal').addEventListener('hide.bs.modal', function (event) {
@@ -226,11 +282,9 @@ export default {
         const OnPosterImgChange = () => {
             if (PosterImgDom.value.files.length >= 1) {
                 let file = PosterImgDom.value.files[0];
-                console.log(file);
                 if (file.size > 1 * 1024 * 1024) {
-                    proxy.$toast.warning("图片大小不能超过1MB");
-                    PosterImgDom.value.value = '';
-                    console.log(PosterImgDom.value.files)
+                    proxy.$toast.warning("图片大小不能超过2MB");
+                    PosterImgDom.value = '';
                     return;
                 }
                 let imgUrl = getObjectURL(file);
@@ -278,8 +332,7 @@ export default {
                 proxy.$toast.error("文章标题有误");
                 return;
             }
-            
-            console.log(PosterImgDom.value.files);
+
             if (PosterImgDom.value.files.length != 0) {
                 let respone = await UpLoadImgByFile('acticleposter', PosterImgDom.value.files[0]);
                 if (respone == null || respone.Status == 500) {
@@ -301,6 +354,7 @@ export default {
             });
             if (respone.Status == 200) {
                 window.onbeforeunload = null;
+                localStorage.removeItem(getCacheKey());
                 router.push("/view/acticleView/" + route.params.blogname + "?id=" + respone.Data);
             }
         }
@@ -329,6 +383,22 @@ export default {
                     ActicleType.value = respone.Data.ActicleType;
                     Content.value = respone.Data.Content;
                 }
+                return;
+            }
+            readActicle();
+        }
+
+        function readActicle(){
+            const cacheKey = getCacheKey();
+            const cache = localStorage.getItem(cacheKey);
+            if (cache) {
+                try {
+                    loadDraftData = JSON.parse(cache);
+                    if (!loadDraftModalInstance) {
+                        loadDraftModalInstance = Modal.getOrCreateInstance(document.getElementById('loadDraftModal'));
+                    }
+                    loadDraftModalInstance.show();
+                } catch (e) {}
             }
         }
 
@@ -355,7 +425,9 @@ export default {
             PosterImgDom,
             ActicleTitleInputDom,
             RequestGetTags,
-            OldActicleTags
+            OldActicleTags,
+            onLoadDraftConfirm,
+            onLoadDraftCancel
         }
     }
 }
