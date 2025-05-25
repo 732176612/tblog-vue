@@ -8,7 +8,7 @@
                     </div>
                     <div class="container">
                         <div class="content-center">
-                            <div class="cc-profile-image">
+                            <div class="cc-profile-image" v-if="UserDto.HeadImgUrl!=''&&UserDto.HeadImgUrl!=undefined">
                                 <a href="#"><img :class="IsLoadImg?'':'placeholder'" :onload="UserHeadOnLoad(this)"
                                         :src="UserDto.HeadImgUrl" alt="头像" /></a>
                             </div>
