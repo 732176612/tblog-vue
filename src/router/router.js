@@ -18,7 +18,7 @@ const routes = [{
   path: '/view/index/:blogname',
   component: () => import('../components/Index.vue'),
   children: [{
-    name: "首页2",
+    name: "首页 ",
     path: '',
     component: () => import('../components/Index-Main.vue')
   }]
@@ -50,7 +50,14 @@ const routes = [{
       component: () => import('../components/ActicleView.vue')
     }
   ]
-}]
+},
+// 404页面路由
+{
+  path: '/:pathMatch(.*)*',
+  name: 'NotFound',
+  component: () => import('../components/NotFound.vue')
+}
+]
 
 export default function (history) {
   return createRouter({

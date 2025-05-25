@@ -19,7 +19,7 @@ export default (({
   console.log("CurrentEnvironment:", mode, domain);
   return defineConfig({
     plugins: [vue()],
-    base: '/view/',
+    base: '/view/index',
     server: {
       host:'0.0.0.0',
       port: "3257",

@@ -16,7 +16,7 @@
                   @click="OnClickMenuBtn(item)">{{item.Name}}</a>
               </li>
               <li v-if="Config.token==''"><a class="nav-link" href="/view/login">登陆</a></li>
-              <li v-if="Config.token!=''&&isSelf($route)==false"><a class="nav-link" :href="'/view/index/'+Config.userSelf.BlogName">回到我的博客</a></li>
+              <li v-if="Config.token!=''&&isSelf($route)==false"><a class="nav-link" :href="'/view/index/'+Config.userSelf.BlogName.userSelf.BlogName">回到我的博客</a></li>
               <li class="nav-item dropdown" v-if="Config.token!=''">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown"
                   aria-expanded="false">个人中心</a>

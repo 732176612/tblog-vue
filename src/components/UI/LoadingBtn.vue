@@ -30,7 +30,12 @@ import {computed} from 'vue'
                 }
                 if (this.awaitAction != "") {
                     this.showSpinner = true;
-                    await this.awaitAction();
+                    try{
+                        await this.awaitAction();
+                    }
+                    catch(e){
+                     console.log(e)   
+                    }
                     this.showSpinner = false;
                 }
             }
