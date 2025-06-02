@@ -165,7 +165,7 @@
             </div>
         </div>
 
-        <div class="section" v-if="$route.params.blogname=='FalseEndLess'">
+        <div class="section" v-if="$route.params.blogname=='FalseEndLess'||$route.params.blogname=='TBlog'">
             <div class="container cc-experience">
                 <div class="h4 text-center mb-4 title">关于TBlog</div>
                 <div class="card">
@@ -180,13 +180,13 @@
                                     <br>
                                     前端源代码:
                                     <a
-                                        href="https://gitee.com/FalseEndLess/tblog">https://gitee.com/FalseEndLess/tblog</a>
+                                        href=" https://github.com/732176612/tblog-vue">https://github.com/732176612/tblog-vue</a>
                                     <br>
                                     前端架构:Vue3.2.16+Vite2.6.4+Bootstrap5.1
                                     <br>
                                     后端源代码:
                                     <a
-                                        href="https://gitee.com/FalseEndLess/tblog-api">https://gitee.com/FalseEndLess/tblog-api</a>
+                                        href="https://github.com/732176612/tblog-api">https://github.com/732176612/tblog-api</a>
                                     <br>
                                     后端架构:.Net6.0+MongoDB5.0.3+Redis6.2.6
                                     <br>
