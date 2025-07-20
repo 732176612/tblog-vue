@@ -480,3 +480,98 @@ export function GetSkillInfo(blogName) {
     },
     false)
 }
+
+/**
+ * @des: 获取文章评论列表
+ * @param {acticleId, pageIndex, pageSize} 
+ * @return {*}
+ */
+export function GetCommentList(acticleId, pageIndex = 1, pageSize = 10) {
+  return request({
+    url: "/api/Comment/GetCommentList",
+    method: "GET",
+    params: {
+      acticleId,
+      pageIndex,
+      pageSize
+    }
+  }, false)
+}
+
+/**
+ * @des: 获取评论的子评论
+ * @param {rootId, pageIndex, pageSize} 
+ * @return {*}
+ */
+export function GetChildComments(rootId, pageIndex = 1, pageSize = 10) {
+  return request({
+    url: "/api/Comment/GetChildComments",
+    method: "GET",
+    params: {
+      rootId,
+      pageIndex,
+      pageSize
+    }
+  }, false)
+}
+
+/**
+ * @des: 创建评论
+ * @param {ActicleId, Content, ParentId} params
+ * @return {*}
+ */
+export function CreateComment(params) {
+  return request({
+    url: "/api/Comment/CreateComment",
+    method: "POST",
+    data: params,
+    headers: {
+      'content-type': 'application/json'
+    }
+  })
+}
+
+/**
+ * @des: 点赞评论
+ * @param {commentId} 
+ * @return {*}
+ */
+export function LikeComment(commentId) {
+  return request({
+    url: "/api/Comment/LikeComment",
+    method: "GET",
+    params: {
+      commentId
+    }
+  })
+}
+
+/**
+ * @des: 删除评论
+ * @param {commentId} 
+ * @return {*}
+ */
+export function DeleteComment(commentId) {
+  return request({
+    url: "/api/Comment/DeleteComment",
+    method: "GET",
+    params: {
+      commentId
+    }
+  })
+}
+
+/**
+ * @des: 获取评论详情
+ * @param {commentId} 
+ * @return {*}
+ */
+export function GetCommentDetail(commentId) {
+  return request({
+    url: "/api/Comment/GetCommentDetail",
+    method: "GET",
+    params: {
+      commentId
+    }
+  }, false)
+}

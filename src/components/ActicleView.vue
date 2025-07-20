@@ -29,6 +29,9 @@
                 <div class="mescroll-upwarp mescroll-hardware" style="visibility: visible; display: block;">
                     <span class="upwarp-nodata">-- END --</span>
                 </div>
+                
+                <!-- 评论区域 -->
+                <CommentSection :acticle-id="$route.query.id" />
                 <div class="footer d-flex justify-content-center">
                     <button type="button" class="btn btn-outline-primary position-relative mx-3"
                         @click="OnClickLikeButton" :disabled="isSelf($route) ? 'disabled' : false">
@@ -84,8 +87,12 @@ import {
 import {
     Modal
 } from 'bootstrap/dist/js/bootstrap.bundle';
+import CommentSection from './CommentSection.vue';
 export default {
     name: "ArtcleEditor",
+    components: {
+        CommentSection
+    },
     data() {
         return {
             Title: "",
