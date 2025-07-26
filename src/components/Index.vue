@@ -16,7 +16,7 @@
                   @click="OnClickMenuBtn(item)">{{item.Name}}</a>
               </li>
               <li v-if="Config.token==''"><a class="nav-link" href="/view/login">登陆</a></li>
-              <li v-if="Config.token!=''&&isSelf($route)==false"><a class="nav-link" :href="'/view/index/'+Config.userSelf.BlogName.userSelf.BlogName">回到我的博客</a></li>
+              <li v-if="Config.token!=''&&isSelf($route)==false"><a class="nav-link" :href="'/view/index/'+Config.userSelf.BlogName">回到我的博客</a></li>
               <li class="nav-item dropdown" v-if="Config.token!=''">
                 <a class="nav-link dropdown-toggle" href="#" id="dropdown07XL" data-bs-toggle="dropdown"
                   aria-expanded="false">个人中心</a>
@@ -94,16 +94,6 @@
           this.$router.push("/view/login");
         }
       },
-      async RefreshUserSelf() {
-        if (this.Config.token != '') {
-          let respone = await SerializeJwt({
-            "token": this.Config.token
-          });
-          if (respone.Data.BlogName != null && respone.Data.BlogName != '') {
-            this.Config.userSelf = respone.Data;
-          }
-        }
-      },
       OnClickLogOut() {
         LogOut();
         this.Config.token = '';
@@ -115,7 +105,6 @@
       },
       async CheckToken() {
         this.Config.token = getCookie('token');
-        await this.RefreshUserSelf();
         if (this.$route.params.blogname == undefined) {
           if (this.Config.token == '') {
             this.$toast.warning('您还未登陆，请登陆');

@@ -368,7 +368,7 @@ export default {
 
         canDeleteComment(comment) {
             // 检查是否是当前用户的评论
-            return this.isLoggedIn && comment.User.Id === this.getCurrentUserId();
+            return this.isLoggedIn && this.isSelfByUserId(comment.User.Id);
         },
 
         getCurrentUserId() {
